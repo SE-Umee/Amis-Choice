@@ -1,11 +1,56 @@
 import { Image, SafeAreaView, StyleSheet, Text, TextInput, View, ImageBackground, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, FlatList } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Colors } from '../assets/styles/colors'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Carousel from 'react-native-snap-carousel';
-
+import { useNavigation } from '@react-navigation/native';
+import { fetchGet, fetchPost } from '../utils/fetch-api';
 const HomeScreen = () => {
+    const navigation = useNavigation();
+    const [category, setCategory] = useState([]);
+    const [search, setSearch] = useState("");
+    const [searchData, setSearchData] = useState();
+
+    const fetchCategory = async () => {
+
+        const data = await fetchPost("/product/category/view")
+        setCategory(data);
+    };
+
+    const fetchSearch = async () => {
+        let response = await fetch('http://192.168.18.86:3002/api/product/view', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title: search })
+        });
+        let jsonResponse = await response.json();
+        setSearchData(jsonResponse);
+    };
+
+
+    useEffect(() => {
+        fetchCategory();
+    }, []);
+
+    useEffect(() => {
+        fetchSearch();
+    }, [search]);
+
+    console.log('====================================');
+    console.log(JSON.stringify(searchData));
+    console.log('====================================');
+
+    const discount = (originalPrice, discount) => {
+        const discountAmount = originalPrice * (discount / 100);
+        const discountedPrice = originalPrice - discountAmount;
+        return (discountedPrice)
+
+    }
+
     const CarouselData = [
         {
             id: 1,
@@ -24,6 +69,142 @@ const HomeScreen = () => {
             image: "https://img.freepik.com/free-photo/chicken-wings-barbecue-sweetly-sour-sauce-picnic-summer-menu-tasty-food-top-view-flat-lay_2829-6471.jpg"
         },
     ]
+    const dummyData = [
+        {
+            id: 1,
+            name: "Bell Pepper Red",
+            stock: true,
+            quantity: 1,
+            discount_price: 300,
+            original_price: 450,
+            image: require("../assets/images/redChilli.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+        {
+            id: 2,
+            name: "Arabic Ginger",
+            stock: true,
+            quantity: 8,
+            discount_price: 1500,
+            original_price: 1650,
+            image: require("../assets/images/pngfuel3.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+        {
+            id: 3,
+            name: "Cherry Tomato",
+            stock: true,
+            quantity: 1,
+            discount_price: 100,
+            original_price: 140,
+            image: require("../assets/images/pngwing.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+        {
+            id: 4,
+            name: "Fresh Spinach",
+            stock: false,
+            quantity: 2,
+            discount_price: 120,
+            original_price: 150,
+            image: require("../assets/images/Spinach.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+        {
+            id: 5,
+            name: "Bell Pepper Red",
+            stock: true,
+            quantity: 1,
+            discount_price: 300,
+            original_price: 450,
+            image: require("../assets/images/redChilli.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+        {
+            id: 6,
+            name: "Arabic Ginger",
+            stock: true,
+            quantity: 8,
+            discount_price: 1500,
+            original_price: 1650,
+            image: require("../assets/images/pngfuel3.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+        {
+            id: 7,
+            name: "Cherry Tomato",
+            stock: true,
+            quantity: 1,
+            discount_price: 100,
+            original_price: 140,
+            image: require("../assets/images/pngwing.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+        {
+            id: 8,
+            name: "Fresh Spinach",
+            stock: false,
+            quantity: 2,
+            discount_price: 120,
+            original_price: 150,
+            image: require("../assets/images/Spinach.png"),
+            images: [
+                require("../assets/images/NicePng_carrot-png_143608.png"),
+                require("../assets/images/pngfuel3.png"),
+                require("../assets/images/pngwing.png"),
+                require("../assets/images/redChilli.png"),
+                require("../assets/images/Spinach.png")
+            ],
+        },
+    ]
+
+    const findDiscount = (originalPrice, discountPrice) => {
+        const discountPercentage = Math.floor((originalPrice - discountPrice) / originalPrice * 100);
+        return (discountPercentage)
+
+    }
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
@@ -35,18 +216,21 @@ const HomeScreen = () => {
                             </View>
                             <Text style={styles.topName}>Ami’s Choice</Text>
                         </View>
-                        <View style={styles.topRightView}>
+                        <TouchableOpacity style={styles.topRightView} onPress={() => navigation.navigate("Cart")}>
                             <Image source={require("../components/icons/groceryCart.png")} />
                             <View style={styles.topQuantity}>
                                 <Text style={styles.topQuantityText}>0</Text>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.searchView}>
                         <AntDesign name="search1" size={24} />
                         <TextInput
+                            value={search}
                             placeholder='search'
                             style={styles.searchText}
+                            showSoftInputOnFocus={false}
+                            onChangeText={setSearch}
                         />
                     </View>
                 </View>
@@ -82,15 +266,27 @@ const HomeScreen = () => {
                     </View>
                     <View style={styles.mapView}>
                         <FlatList
+                            showsHorizontalScrollIndicator={false}
                             horizontal
-                            data={CarouselData}
+                            data={category?.result?.rows}
                             renderItem={({ item }) => {
                                 return (
-                                    <TouchableOpacity style={{ flex: 1, alignItems: 'center', paddingRight: 10 }}>
+                                    <TouchableOpacity
+                                        style={
+                                            {
+                                                flex: 1,
+                                                alignItems: 'center',
+                                                paddingRight: 10
+                                            }
+                                        }
+                                        onPress={() => {
+                                            navigation.navigate("CategoryItems", { itemId: item.id })
+                                        }
+                                        }>
                                         <View style={styles.itemImageView}>
                                             <Image source={require("../components/icons/apple.png")} height={30} width={100} />
                                         </View>
-                                        <Text style={styles.categoriesName}>Fruits</Text>
+                                        <Text style={styles.categoriesName}>{item.title}</Text>
                                     </TouchableOpacity>
                                 )
                             }}
@@ -112,30 +308,36 @@ const HomeScreen = () => {
                     <View style={{ flex: 0.9 }}>
                         <FlatList
                             numColumns={2}
-                            data={CarouselData}
+                            data={searchData?.result?.rows}
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item }) => {
                                 return (
-                                    <View style={styles.bestSellingCard}>
-                                        <View style={styles.stockView}>
-                                            <Text style={styles.stockText}>Instock</Text>
-                                        </View>
-                                        <Image source={require("../assets/images/redChilli.png")} style={{ alignSelf: 'center' }} />
-                                        <Text style={styles.bestSellingName}>Bell Pepper Red</Text>
+                                    <TouchableOpacity style={styles.bestSellingCard} onPress={() => navigation.navigate("ItemDetails", { item })}>
+                                        {item.quantity > 0 ?
+                                            <View style={styles.stockView}>
+                                                <Text style={styles.stockText}>Instock</Text>
+                                            </View>
+                                            :
+                                            <View style={styles.outOfStockView}>
+                                                <Text style={styles.outOfStockText}>Out of stock</Text>
+                                            </View>
+                                        }
+                                        <Image source={{ uri: item.productImages[0].url }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
+                                        <Text style={styles.bestSellingName}>{item.title}</Text>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingVertical: '4%' }}>
-                                            <Text style={styles.quantity}>1kg</Text>
+                                            <Text style={styles.quantity}>{item.quantity}kg</Text>
                                             <View style={styles.percentage}>
-                                                <Text style={styles.percentageNo}>5% Off</Text>
+                                                <Text style={styles.percentageNo}>{item.discount}% of Off</Text>
                                             </View>
                                         </View>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%' }}>
-                                            <Text style={styles.percentagePrice}>Rs.100</Text>
-                                            <Text style={styles.originalPrice}>Rs.450</Text>
+                                            <Text style={styles.percentagePrice}>{`Rs.${discount(item.price, item.discount)}`}</Text>
+                                            <Text style={styles.originalPrice}>Rs.{item.price}</Text>
                                         </View>
-                                        <View style={styles.addButton}>
+                                        <TouchableOpacity style={item.quantity > 0 ? styles.addButton : [styles.addButton, { backgroundColor: Colors.gray }]}>
                                             <MaterialIcons name="add" size={24} color="#fff" />
-                                        </View>
-                                    </View>
+                                        </TouchableOpacity>
+                                    </TouchableOpacity>
                                 )
                             }}
                         />
@@ -315,12 +517,12 @@ const styles = StyleSheet.create({
     },
     bestSellingCard: {
         backgroundColor: '#F3F5F7',
-        width: "45%",
-        height: "90%",
+        width: 163,
+        height: 236,
         borderRadius: 16,
-        marginTop: '3%',
+        // marginTop: '1%',
         marginRight: '5%',
-        marginBottom: '5%'
+        marginBottom: '10%',
     },
     stockView: {
         backgroundColor: "#b7f7cc",
@@ -334,6 +536,22 @@ const styles = StyleSheet.create({
     },
     stockText: {
         color: Colors.greenColor,
+        fontWeight: '400',
+        fontSize: 10,
+        lineHeight: 13.44
+    },
+    outOfStockView: {
+        backgroundColor: "#ff66664D",
+        width: '45%',
+        alignSelf: 'flex-end',
+        borderRadius: 100,
+        paddingVertical: "2%",
+        alignItems: 'center',
+        marginTop: "6%",
+        marginRight: '6%'
+    },
+    outOfStockText: {
+        color: Colors.redButton,
         fontWeight: '400',
         fontSize: 10,
         lineHeight: 13.44

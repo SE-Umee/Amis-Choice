@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
         width: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        left: 0
+        left: 0,
+        backgroundColor: "#F1F1F5"
     },
     headingText: {
         fontSize: 25,
