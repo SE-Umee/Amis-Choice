@@ -8,6 +8,7 @@ import HomeScreen from './src/screens/home-screen';
 import CategoryItemsScreen from './src/screens/category-items-screen';
 import ItemDetailsScreen from './src/screens/item-details-screen';
 import CartScreen from './src/screens/cart-screen';
+import { CartStore } from './src/store/cart-store';
 
 
 const Stack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ const App = () => {
 
   return (
     <PaperProvider>
+      <CartStore.Provider>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen name='Home' component={HomeScreen}/>
@@ -23,6 +25,7 @@ const App = () => {
         <Stack.Screen name='Cart' component={CartScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
+    </CartStore.Provider>
     </PaperProvider>
 
   )

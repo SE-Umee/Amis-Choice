@@ -6,21 +6,34 @@ import Entypo from "react-native-vector-icons/Entypo";
 import StarRating from 'react-native-star-rating';
 import { useNavigation } from '@react-navigation/native';
 import Carousel, { Pagination } from 'react-native-snap-carousel'
+import { CartStore } from '../store/cart-store';
 const ItemDetailsScreen = ({ route }) => {
     const { item } = route.params;
     const navigation = useNavigation();
     const [index, setIndex] = useState(0);
     const [quantity, setQuantity] = useState(0)
-    const isCarousel = useRef(null)
+    const isCarousel = useRef(null);
+    const cartStore = CartStore.useContainer();
+    const [itemIsInCart, setItemIsInCart] = useState(false)
 
     const findDiscount = (originalPrice, discount) => {
         const discountAmount = originalPrice * (discount / 100);
         const discountedPrice = originalPrice - discountAmount;
         return (discountedPrice)
     }
-    console.log('====================================');
-    console.log(item);
-    console.log('====================================');
+
+    const isItemInCart = (item) => {
+        if (cartStore.cart.find((product) => product?.id == item?.id)) {
+            setItemIsInCart(true)
+        }
+        else {
+            cartStore.setCart([...cartStore.cart, item])
+            setItemIsInCart(true)
+        }
+    }
+
+
+
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
@@ -33,7 +46,7 @@ const ItemDetailsScreen = ({ route }) => {
                             <TouchableOpacity style={styles.cartIconView} onPress={() => navigation.navigate("Cart")}>
                                 <Image source={require("../components/icons/groceryCart.png")} height={20} width={20} />
                                 <View style={styles.topQuantity}>
-                                    <Text style={styles.topQuantityText}>{2}</Text>
+                                    <Text style={styles.topQuantityText}>{cartStore.cart.length}</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -119,7 +132,7 @@ const ItemDetailsScreen = ({ route }) => {
                         </View>
                     </ScrollView>
                 </View>
-                <TouchableOpacity style={styles.addCartBtn}>
+                <TouchableOpacity style={!itemIsInCart ? styles.addCartBtn : [styles.addCartBtn, { backgroundColor: Colors.gray }]} onPress={() => { isItemInCart(item) }}>
                     <Text style={styles.addCartText}>Add Cart</Text>
                 </TouchableOpacity>
             </SafeAreaView>
