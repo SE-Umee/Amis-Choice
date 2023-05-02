@@ -44,7 +44,9 @@ const CartScreen = () => {
                                 <>
                                     <CartItemCard
                                         item={item}
+                                        subTotal={subTotal}
                                         setSubTotal={setSubTotal}
+                                        discount={discount}
                                         setDiscount={setDiscount}
 
                                     />

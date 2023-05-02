@@ -5,10 +5,11 @@ import Entypo from "react-native-vector-icons/Entypo";
 import { Colors } from '../assets/styles/colors';
 import { CartStore } from '../store/cart-store';
 
-const CartItemCard = ({ item, setSubTotal, setDiscount }) => {
+const CartItemCard = ({ item, setSubTotal, subTotal, setDiscount, discount }) => {
 
     const [quantity, setQuantity] = useState(1);
     const cartStore = CartStore.useContainer();
+
 
 
     const getTotal = () => {
@@ -66,6 +67,11 @@ const CartItemCard = ({ item, setSubTotal, setDiscount }) => {
     const deleteItem = (currentItemId) => {
         const filtered = cartStore.cart.filter((item) => item?.id != currentItemId);
         cartStore.setCart(filtered);
+        let index = cartStore.cart.findIndex((obj => obj.id == currentItemId))
+
+        setSubTotal(subTotal - cartStore.cart[index].price)
+        setDiscount(discount - findDiscount(cartStore.cart[index].price, cartStore.cart[index].discount))
+
     }
 
     const findDiscount = (originalPrice, discount) => {
