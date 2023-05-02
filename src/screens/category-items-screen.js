@@ -4,11 +4,17 @@ import { Colors } from '../assets/styles/colors'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useNavigation } from '@react-navigation/native';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { CartStore } from '../store/cart-store';
+import BestSellingCard from '../components/best-selling-card';
 
 const CategoryItemsScreen = ({ route }) => {
     const { itemId } = route.params;
-
+    const navigation = useNavigation();
+    const cartStore = CartStore.useContainer();
     const [product, setProduct] = useState([]);
+    const [itemIsInCart, setItemIsInCart] = useState(false)
+
+
     const fetchProduct = async (id) => {
         let response = await fetch(`http://192.168.18.86:3002/api/product/category/view/${id}`);
         let data = await response.json();
@@ -25,7 +31,17 @@ const CategoryItemsScreen = ({ route }) => {
         const discountedPrice = originalPrice - discountAmount;
         return (discountedPrice)
     }
-    const navigation = useNavigation();
+
+    const isItemInCart = (item) => {
+        if (cartStore.cart.find((product) => product.id == item.id)) {
+            setItemIsInCart(true)
+        }
+        else {
+            cartStore.setCart([...cartStore.cart, item])
+            setItemIsInCart(true)
+        }
+    }
+
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
@@ -46,7 +62,7 @@ const CategoryItemsScreen = ({ route }) => {
                         <TouchableOpacity style={styles.cartIconView} onPress={() => navigation.navigate("Cart")}>
                             <Image source={require("../components/icons/groceryCart.png")} height={20} width={20} />
                             <View style={styles.topQuantity}>
-                                <Text style={styles.topQuantityText}>{`${product?.result?.products.length}`}</Text>
+                                <Text style={styles.topQuantityText}>{cartStore.cart.length}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -58,32 +74,7 @@ const CategoryItemsScreen = ({ route }) => {
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item }) => {
                             return (
-                                <TouchableOpacity style={styles.bestSellingCard} onPress={() => navigation.navigate("ItemDetails", { item })}>
-                                    {item.quantity > 0 ?
-                                        <View style={styles.stockView}>
-                                            <Text style={styles.stockText}>Instock</Text>
-                                        </View>
-                                        :
-                                        <View style={styles.outOfStockView}>
-                                            <Text style={styles.outOfStockText}>Out of stock</Text>
-                                        </View>
-                                    }
-                                    <Image source={{ uri: item?.productImages[0]?.url }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
-                                    <Text style={styles.bestSellingName}>{item.title}</Text>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingVertical: '4%' }}>
-                                        <Text style={styles.quantity}>{item.quantity}kg</Text>
-                                        <View style={styles.percentage}>
-                                            <Text style={styles.percentageNo}>{item.discount}% of Off</Text>
-                                        </View>
-                                    </View>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%' }}>
-                                        <Text style={styles.percentagePrice}>{`Rs.${findDiscount(item.price, item.discount)}`}</Text>
-                                        <Text style={styles.originalPrice}>Rs.{item.price}</Text>
-                                    </View>
-                                    <TouchableOpacity style={item.quantity > 0 ? styles.addButton : [styles.addButton, { backgroundColor: Colors.gray }]}>
-                                        <MaterialIcons name="add" size={24} color="#fff" />
-                                    </TouchableOpacity>
-                                </TouchableOpacity>
+                                <BestSellingCard item={item} />
                             )
                         }}
                     />

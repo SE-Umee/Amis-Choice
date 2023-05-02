@@ -8,42 +8,25 @@ import {
     Image,
     FlatList
 } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import AntDesign from "react-native-vector-icons/AntDesign"
 import { Colors } from '../assets/styles/colors'
 import { useNavigation } from '@react-navigation/native'
-import Entypo from "react-native-vector-icons/Entypo";
+import { CartStore } from '../store/cart-store'
+import CartItemCard from '../components/cart-item-card'
 
 const CartScreen = () => {
     const navigation = useNavigation();
+    const cartStore = CartStore.useContainer();
+    const [subTotal, setSubTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
 
 
-    const Dummy = [
-        {
-            id: 1
-        },
-        {
-            id: 2
-        },
-        {
-            id: 3
-        },
-        {
-            id: 4
-        },
-        {
-            id: 1
-        },
-        {
-            id: 2
-        },
-        {
-            id: 3
-        },
-        {
-            id: 4
-        },
-    ]
+    const dis = () => {
+        let totalDiscount = subTotal - discount;
+        return (totalDiscount)
+    }
+
     return (
         <View style={styles.maiaContainer}>
             <SafeAreaView style={styles.maiaContainer}>
@@ -55,30 +38,16 @@ const CartScreen = () => {
                 </View>
                 <ScrollView style={styles.cartItems}>
                     <FlatList
-                        data={Dummy}
+                        data={cartStore.cart}
                         renderItem={({ item }) => {
                             return (
                                 <>
-                                    <View style={styles.cartItem}>
-                                        <AntDesign name="delete" color={Colors.redText} size={24} />
-                                        <Image source={require("../assets/images/redChilli.png")} style={{ height: 42, width: 48 }} />
-                                        <View>
-                                            <Text style={styles.itemName}>Bell Pepper Red</Text>
-                                            <View style={{ flexDirection: "row", justifyContent: 'space-between', alignItems: "center", paddingTop: '5%' }}>
-                                                <Text style={styles.quantity}>1kg</Text>
-                                                <Text style={styles.quantity}>Rs.150</Text>
-                                            </View>
-                                        </View>
-                                        <View style={{ flexDirection: 'row', alignItems: 'center', width: 110, justifyContent: 'space-between' }}>
-                                            <TouchableOpacity style={styles.addQuantity} onPress={() => { }}>
-                                                <Entypo name="minus" size={24} />
-                                            </TouchableOpacity>
-                                            <Text style={styles.quantityText}>1</Text>
-                                            <TouchableOpacity style={[styles.addQuantity, { backgroundColor: Colors.greenColor }]} onPress={() => { }}>
-                                                <Entypo name="plus" size={24} />
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
+                                    <CartItemCard
+                                        item={item}
+                                        setSubTotal={setSubTotal}
+                                        setDiscount={setDiscount}
+
+                                    />
                                     <View style={styles.line} />
                                 </>
                             )
@@ -88,17 +57,17 @@ const CartScreen = () => {
                     <View style={styles.receipt}>
                         <View style={styles.subTotal}>
                             <Text style={styles.subTotalText}>Subtotal</Text>
-                            <Text style={styles.subTotalAmount}>Rs. 1150</Text>
+                            <Text style={styles.subTotalAmount}>Rs. {subTotal}</Text>
                         </View>
                         <View style={styles.line}></View>
                         <View style={styles.subTotal}>
                             <Text style={styles.discountText}>Discount</Text>
-                            <Text style={styles.discountText}>Rs. 100</Text>
+                            <Text style={styles.discountText}>{`Rs. ${dis()}`}</Text>
                         </View>
                         <View style={styles.line}></View>
                         <View style={styles.subTotal}>
                             <Text style={styles.totalText}>Total</Text>
-                            <Text style={styles.totalAmount}>Rs. 1050</Text>
+                            <Text style={styles.totalAmount}>Rs. {discount}</Text>
                         </View>
                     </View>
                 </ScrollView>
