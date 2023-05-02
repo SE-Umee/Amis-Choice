@@ -37,6 +37,21 @@ const BestSellingCard = ({ item }) => {
     }
 
 
+    const isItemInCartCheck = (itemId) => {
+        if (cartStore.cart.find((product) => product?.id == itemId)) {
+            setItemIsInCart(true)
+        }
+        else {
+            setItemIsInCart(false)
+        }
+    }
+
+
+    useEffect(() => {
+        isItemInCartCheck(item.id)
+    }, [cartStore.cart])
+
+
     return (
         <TouchableOpacity style={styles.bestSellingCard} onPress={() => navigation.navigate("ItemDetails", { item })}>
             {item.quantity > 0 ?

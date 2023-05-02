@@ -26,22 +26,6 @@ const CategoryItemsScreen = ({ route }) => {
     }, [itemId])
 
 
-    const findDiscount = (originalPrice, discount) => {
-        const discountAmount = originalPrice * (discount / 100);
-        const discountedPrice = originalPrice - discountAmount;
-        return (discountedPrice)
-    }
-
-    const isItemInCart = (item) => {
-        if (cartStore.cart.find((product) => product.id == item.id)) {
-            setItemIsInCart(true)
-        }
-        else {
-            cartStore.setCart([...cartStore.cart, item])
-            setItemIsInCart(true)
-        }
-    }
-
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>

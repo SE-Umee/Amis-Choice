@@ -1,5 +1,5 @@
 import { Image, SafeAreaView, StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { Colors } from '../assets/styles/colors'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
@@ -27,10 +27,31 @@ const ItemDetailsScreen = ({ route }) => {
             setItemIsInCart(true)
         }
         else {
-            cartStore.setCart([...cartStore.cart, item])
+            cartStore.setCart([...cartStore.cart, {
+                id: item.id,
+                title: item.title,
+                discount: item.discount,
+                price: item.price,
+                productImages: item?.productImages[0]?.url,
+                quantity: item.quantity,
+                numberOfItem: quantity,
+            }])
             setItemIsInCart(true)
         }
     }
+
+    const isItemInCartCheck = (itemId) => {
+        if (cartStore.cart.find((product) => product?.id == itemId)) {
+            setItemIsInCart(true)
+        } else {
+            setItemIsInCart(false)
+        }
+    }
+
+
+    useEffect(() => {
+        isItemInCartCheck(item.id)
+    }, [cartStore.cart])
 
 
 
