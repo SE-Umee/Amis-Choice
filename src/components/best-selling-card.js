@@ -19,17 +19,20 @@ const BestSellingCard = ({ item }) => {
 
 
     const isItemInCart = (item) => {
+        console.log('====================================');
+        console.log(item);
+        console.log('====================================');
         if (cartStore.cart.find((product) => product?.id == item?.id)) {
             setItemIsInCart(true)
         }
         else {
             cartStore.setCart([...cartStore.cart, {
-                id: item.id,
-                title: item.title,
-                discount: item.discount,
-                price: item.price,
-                productImages: item.productImages[0].url,
-                quantity: item.quantity,
+                id: item?.id,
+                title: item?.title,
+                discount: item?.discount,
+                price: item?.price,
+                productImages: item?.productImages[0]?.url,
+                quantity: item?.quantity,
                 numberOfItem: 1,
             }])
             setItemIsInCart(true);
@@ -63,7 +66,7 @@ const BestSellingCard = ({ item }) => {
                     <Text style={styles.outOfStockText}>Out of stock</Text>
                 </View>
             }
-            <Image source={{ uri: item?.productImages[0].url }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
+            <Image source={{ uri: item?.productImages[0]?.url }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
             <Text style={styles.bestSellingName}>{item.title}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingVertical: '4%' }}>
                 <Text style={styles.quantity}>{item.quantity}kg</Text>
@@ -93,7 +96,6 @@ const styles = StyleSheet.create({
         width: 163,
         height: 236,
         borderRadius: 16,
-        // marginTop: '1%',
         marginRight: '5%',
         marginBottom: '10%',
     },

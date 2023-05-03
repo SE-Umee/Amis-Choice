@@ -17,6 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { fetchGet, fetchPost } from '../utils/fetch-api';
 import { CartStore } from '../store/cart-store';
 import BestSellingCard from '../components/best-selling-card';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [category, setCategory] = useState([]);
@@ -69,6 +70,20 @@ const HomeScreen = () => {
             image: "https://img.freepik.com/free-photo/chicken-wings-barbecue-sweetly-sour-sauce-picnic-summer-menu-tasty-food-top-view-flat-lay_2829-6471.jpg"
         },
     ]
+
+
+    const getCartData = async () => {
+        try {
+            const cart = await AsyncStorage.getItem('@cart')
+            cartStore.setCart(JSON.parse(cart))
+        } catch (e) {
+            alert('Failed to save the data to the storage')
+        }
+    }
+
+    useEffect(() => {
+        getCartData();
+    }, []);
 
 
     return (

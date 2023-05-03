@@ -11,7 +11,7 @@ const ItemDetailsScreen = ({ route }) => {
     const { item } = route.params;
     const navigation = useNavigation();
     const [index, setIndex] = useState(0);
-    const [quantity, setQuantity] = useState(0)
+    const [quantity, setQuantity] = useState(1)
     const isCarousel = useRef(null);
     const cartStore = CartStore.useContainer();
     const [itemIsInCart, setItemIsInCart] = useState(false)
@@ -28,12 +28,12 @@ const ItemDetailsScreen = ({ route }) => {
         }
         else {
             cartStore.setCart([...cartStore.cart, {
-                id: item.id,
-                title: item.title,
-                discount: item.discount,
-                price: item.price,
+                id: item?.id,
+                title: item?.title,
+                discount: item?.discount,
+                price: item?.price,
                 productImages: item?.productImages[0]?.url,
-                quantity: item.quantity,
+                quantity: item?.quantity,
                 numberOfItem: quantity,
             }])
             setItemIsInCart(true)

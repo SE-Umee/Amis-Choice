@@ -1,9 +1,22 @@
-import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { createContainer } from "unstated-next";
 
 const cartStore = () => {
     const [cart, setCart] = useState([]);
 
+
+    const saveCartData = async () => {
+        try {
+            await AsyncStorage.setItem('@cart', JSON.stringify(cart))
+        } catch (e) {
+            alert('Failed to save the data to the storage')
+        }
+    }
+
+    useEffect(() => {
+        saveCartData();
+    }, [cart]);
 
     return {
         cart,

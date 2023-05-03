@@ -69,8 +69,8 @@ const CartItemCard = ({ item, setSubTotal, subTotal, setDiscount, discount }) =>
         cartStore.setCart(filtered);
         let index = cartStore.cart.findIndex((obj => obj.id == currentItemId))
 
-        setSubTotal(subTotal - cartStore.cart[index].price)
-        setDiscount(discount - findDiscount(cartStore.cart[index].price, cartStore.cart[index].discount))
+        setSubTotal(subTotal - (cartStore.cart[index].price * cartStore.cart[index].numberOfItem))
+        setDiscount(discount - (findDiscount(cartStore.cart[index].price, cartStore.cart[index].discount) * cartStore.cart[index].numberOfItem))
 
     }
 
