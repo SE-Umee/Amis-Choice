@@ -19,7 +19,7 @@ const CartItemCard = ({ item, setSubTotal, subTotal, setDiscount, discount }) =>
                 return a + (b.numberOfItem * b.price)
             }, 0)
 
-        setSubTotal(total)
+        setSubTotal(Math.round(total))
     }
 
 
@@ -31,7 +31,7 @@ const CartItemCard = ({ item, setSubTotal, subTotal, setDiscount, discount }) =>
                 return a + (b.numberOfItem * findDiscount(b.price, b.discount))
             }, 0)
 
-        setDiscount(total)
+        setDiscount(Math.round(total))
     }
 
     useEffect(() => {

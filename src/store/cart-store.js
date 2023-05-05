@@ -4,6 +4,7 @@ import { createContainer } from "unstated-next";
 
 const cartStore = () => {
     const [cart, setCart] = useState([]);
+    const [user, setUser] = useState({});
 
 
     const saveCartData = async () => {
@@ -20,7 +21,9 @@ const cartStore = () => {
 
     return {
         cart,
-        setCart
+        setCart,
+        user,
+        setUser
     };
 };
 

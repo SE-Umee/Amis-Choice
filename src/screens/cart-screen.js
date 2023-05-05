@@ -8,7 +8,7 @@ import {
     Image,
     FlatList
 } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import AntDesign from "react-native-vector-icons/AntDesign"
 import { Colors } from '../assets/styles/colors'
 import { useNavigation } from '@react-navigation/native'
@@ -24,7 +24,7 @@ const CartScreen = () => {
 
     const dis = () => {
         let totalDiscount = subTotal - discount;
-        return (totalDiscount)
+        return (Math.round(totalDiscount))
     }
 
     return (
@@ -73,7 +73,7 @@ const CartScreen = () => {
                         </View>
                     </View>
                 </ScrollView>
-                <TouchableOpacity style={styles.checkOutButn}>
+                <TouchableOpacity style={styles.checkOutButn} onPress={() => navigation.navigate("LogIn")}>
                     <Text style={styles.checkOutText}>Check out</Text>
                 </TouchableOpacity>
             </SafeAreaView>
