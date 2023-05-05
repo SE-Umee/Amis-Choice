@@ -1,17 +1,61 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { Colors } from '../assets/styles/colors'
 import { TextInput } from 'react-native-paper';
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useNavigation } from '@react-navigation/native';
+import { fetchPost } from '../utils/fetch-api';
+import { CartStore } from '../store/cart-store';
 
 const LoginScreen = () => {
+    const cartStore = CartStore.useContainer();
+    const navigation = useNavigation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+
+
+    const fetchUser = async () => {
+        const data = await fetchPost("/client/login", JSON.stringify({
+            email: email,
+            password: password
+        }))
+
+        navigation.navigate("CheckOut")
+        // if (data.statusCode === 200) {
+        //     cartStore.setUser(data)
+        //     navigation.navigate("CheckOut")
+        // }
+        // else {
+        //     Alert.alert("Email or Password are incorrect ")
+        // }
+
+
+
+
+    };
+
+
+    const forgetPassword = async () => {
+        const data = await fetchPost("/client/forget-password", JSON.stringify({
+            email: email,
+        }))
+
+        if (data.statusCode === 200) {
+            navigation.navigate("ForgotPassword")
+        }
+        else {
+            Alert.alert("User Dose't exist")
+        }
+
+    };
+
+
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.headingView} >
-                    <TouchableOpacity style={styles.BackArrow}>
+                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
                         <AntDesign name="left" />
                     </TouchableOpacity>
                     <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
@@ -41,18 +85,20 @@ const LoginScreen = () => {
                         right={<TextInput.Icon icon="eye" color={((isTextInputFocused = false) => Colors.gray | undefined) | Colors.greenColor} />} lock
                         left={<TextInput.Icon icon="lock" />}
                     />
-                    <TouchableOpacity style={styles.forget}>
+                    <TouchableOpacity style={styles.forget} onPress={() => { forgetPassword() }}>
                         <Text style={styles.forgetText}>Forgot password?</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonView}>
-                    <TouchableOpacity style={styles.login}>
+                    <TouchableOpacity style={styles.login} onPress={() => {
+                        fetchUser()
+                    }}>
                         <Text style={styles.loginText}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.dontAcc}>
                         <Text style={styles.forgetText}>{"Don’t have account?"}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.login, { backgroundColor: Colors.redButton }]}>
+                    <TouchableOpacity style={[styles.login, { backgroundColor: Colors.redButton }]} onPress={() => navigation.navigate("SignUp")}>
                         <Text style={styles.loginText}>Create An Account</Text>
                     </TouchableOpacity>
                 </View>
@@ -80,8 +126,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         borderWidth: 0.1,
         borderRadius: 100,
-        height: 30,
-        width: 30,
+        height: 44,
+        width: 44,
         justifyContent: 'center',
         alignItems: 'center',
         left: 0,
@@ -104,6 +150,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 46,
         marginVertical: '2%',
+
         borderRadius: 8,
         shadowColor: "#575C55",
         shadowOffset: {

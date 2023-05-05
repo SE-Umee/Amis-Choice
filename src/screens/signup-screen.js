@@ -5,19 +5,42 @@ import { TextInput } from 'react-native-paper'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Octicons from "react-native-vector-icons/Octicons";
 import Feather from "react-native-vector-icons/Feather";
+import { useNavigation } from '@react-navigation/native';
+import { fetchPost } from '../utils/fetch-api';
 
 const SignupScreen = () => {
+    const navigation = useNavigation();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNo, setPhoneNo] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+
+    const fetchUser = async () => {
+        const data = await fetchPost("/client/signup", JSON.stringify({
+            name: name,
+            email: email,
+            password: password,
+            phone: phoneNo,
+            photoURL: "xyz.pnj"
+        }))
+
+        console.log('====================================');
+        console.log(data);
+        console.log('====================================');
+
+        cartStore.setUser(data)
+
+    };
+
+
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <ScrollView>
                     <View style={styles.headingView} >
-                        <TouchableOpacity style={styles.BackArrow}>
+                        <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
                             <AntDesign name="left" />
                         </TouchableOpacity>
                         <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
@@ -79,7 +102,7 @@ const SignupScreen = () => {
 
                     </View>
                     <View style={styles.buttonView}>
-                        <TouchableOpacity style={styles.login}>
+                        <TouchableOpacity style={styles.login} onPress={() => fetchUser()}>
                             <Text style={styles.loginText}>Create Account</Text>
                         </TouchableOpacity>
                     </View>
@@ -108,8 +131,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         borderWidth: 0.1,
         borderRadius: 100,
-        height: 30,
-        width: 30,
+        height: 44,
+        width: 44,
         justifyContent: 'center',
         alignItems: 'center',
         left: 0,

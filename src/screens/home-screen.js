@@ -100,7 +100,7 @@ const HomeScreen = () => {
                         <TouchableOpacity style={styles.topRightView} onPress={() => navigation.navigate("Cart")}>
                             <Image source={require("../components/icons/groceryCart.png")} />
                             <View style={styles.topQuantity}>
-                                <Text style={styles.topQuantityText}>{cartStore.cart.length}</Text>
+                                <Text style={styles.topQuantityText}>{cartStore.cart?.length}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
