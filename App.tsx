@@ -11,8 +11,9 @@ import CartScreen from './src/screens/cart-screen';
 import { CartStore } from './src/store/cart-store';
 import LoginScreen from './src/screens/login-screen';
 import SignupScreen from './src/screens/signup-screen';
-import CheckOutScreen from './src/screens/check-out-screen';
 import ForgotPasswordScreen from './src/screens/forgot-password-screen';
+import ResetPasswordScreen from './src/screens/reset-password-screen';
+import CheckOutScreen from './src/screens/check-out-screen';
 import PlaceOrderSuccessScreen from './src/screens/place-order-success-screen';
 
 
@@ -33,6 +34,8 @@ const App = () => {
         <Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen}/>
         <Stack.Screen name='CheckOut' component={CheckOutScreen}/>
         <Stack.Screen name='OrderSuccess' component={PlaceOrderSuccessScreen}/>
+        <Stack.Screen name='ResetPassword' component={ResetPasswordScreen}/>
+
       </Stack.Navigator>
     </NavigationContainer>
     </CartStore.Provider>

@@ -19,10 +19,7 @@ const BestSellingCard = ({ item }) => {
 
 
     const isItemInCart = (item) => {
-        console.log('====================================');
-        console.log(item);
-        console.log('====================================');
-        if (cartStore.cart.find((product) => product?.id == item?.id)) {
+        if (cartStore.cart?.find((product) => product?.id == item?.id)) {
             setItemIsInCart(true)
         }
         else {
@@ -41,7 +38,7 @@ const BestSellingCard = ({ item }) => {
 
 
     const isItemInCartCheck = (itemId) => {
-        if (cartStore.cart.find((product) => product?.id == itemId)) {
+        if (cartStore.cart?.find((product) => product?.id == itemId)) {
             setItemIsInCart(true)
         }
         else {
