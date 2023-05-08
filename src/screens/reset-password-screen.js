@@ -1,12 +1,46 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { Colors } from '../assets/styles/colors'
 import { TextInput } from 'react-native-paper';
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { useNavigation } from '@react-navigation/native';
 
-const ResetPasswordScreen = () => {
+const ResetPasswordScreen = ({ route }) => {
+    const { otp, data } = route.params;
+    const navigation = useNavigation();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const changePassword = async () => {
+        if (confirmPassword === password) {
+            let response = await fetch('http://192.168.18.86:3002/api/client/change-forget-password', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${data.result.tokenInfo}`,
+                },
+                body: JSON.stringify({
+                    otp: otp,
+                    password: password
+                }),
+            });
+            let jsonResponse = await response.json();
+
+            if (jsonResponse.statusCode === 200) {
+                Alert.alert("Password Reset")
+                navigation.navigate("LogIn")
+            }
+            else {
+                Alert.alert("Try Again")
+            }
+        }
+        else {
+            Alert.alert("HELOO")
+        }
+    };
+
+
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
@@ -44,7 +78,7 @@ const ResetPasswordScreen = () => {
                         left={<TextInput.Icon icon="lock" />}
                     />
                 </View>
-                <TouchableOpacity style={styles.login}>
+                <TouchableOpacity style={styles.login} onPress={() => changePassword()}>
                     <Text style={styles.loginText}>Reset Password</Text>
                 </TouchableOpacity>
             </SafeAreaView>

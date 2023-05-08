@@ -5,7 +5,8 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useNavigation } from '@react-navigation/native';
 
-const PlaceOrderSuccessScreen = () => {
+const PlaceOrderSuccessScreen = ({ route }) => {
+  const { address, phone } = route.params;
   const navigation = useNavigation();
   return (
     <View style={styles.mainContainer}>
@@ -26,11 +27,11 @@ const PlaceOrderSuccessScreen = () => {
             </View>
             <View style={styles.innerOrderCard}>
               <Text style={styles.cardText}>Address :</Text>
-              <Text style={styles.cardText}>53 house, street 9, i/8</Text>
+              <Text style={styles.cardText}>{address}</Text>
             </View>
             <View style={styles.innerOrderCard}>
               <Text style={styles.cardText}>Phone: :</Text>
-              <Text style={styles.cardText}>03000000000</Text>
+              <Text style={styles.cardText}>{phone}</Text>
             </View>
           </View>
 

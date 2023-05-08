@@ -1,27 +1,63 @@
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, TextInput } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, TextInput, Alert } from 'react-native'
 import React, { useState, useRef } from 'react'
 import { Colors } from '../assets/styles/colors'
 import AntDesign from "react-native-vector-icons/AntDesign";
+import { fetchPost } from '../utils/fetch-api';
+import { useNavigation } from '@react-navigation/native';
 
-const ForgotPasswordScreen = () => {
+const ForgotPasswordScreen = ({ route }) => {
+    const { email } = route.params;
+    const navigation = useNavigation();
     const [firstDigit, setFirstDigit] = useState("");
     const [secondDigit, setSecondDigit] = useState("");
     const [thirdDigit, setThirdDigit] = useState("");
     const [fourthDigit, setFourthDigit] = useState("");
+    const [fifthDigit, setFifthDigit] = useState("");
+    const [sixthDigit, setSixthDigit] = useState("");
     const input1Ref = useRef();
     const input2Ref = useRef();
     const input3Ref = useRef();
     const input4Ref = useRef();
+    const input5Ref = useRef();
+    const input6Ref = useRef();
+
     const handleInputChange = (value, inputRef) => {
         if (value.length === 1 && inputRef.current) {
             inputRef.current.focus();
         }
     };
+
+    const fetchOTP = async () => {
+        var OTP = firstDigit.concat("", secondDigit, thirdDigit, fourthDigit, fifthDigit, sixthDigit)
+        const data = await fetchPost("/client/verify-forget-password", JSON.stringify({
+            email: email,
+            otp: OTP
+        }))
+        if (data.statusCode === 200) {
+            fetchUser(email, OTP)
+        }
+        else {
+            Alert.alert("Hello")
+        }
+
+    };
+
+
+    const fetchUser = async (email, otp) => {
+        const data = await fetchPost("/client/verify-forget-password", JSON.stringify({
+            email: email,
+            otp: otp
+        }))
+        navigation.navigate("ResetPassword", { otp, data })
+    };
+
+
+
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.headingView} >
-                    <TouchableOpacity style={styles.BackArrow}>
+                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
                         <AntDesign name="left" />
                     </TouchableOpacity>
                     <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
@@ -68,17 +104,39 @@ const ForgotPasswordScreen = () => {
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={setFourthDigit}
                         value={fourthDigit}
                         keyboardType="number-pad"
                         maxLength={1}
+                        onChangeText={(value) => {
+                            setFourthDigit(value)
+                            handleInputChange(value, input5Ref)
+                        }}
                         ref={input4Ref}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        value={fifthDigit}
+                        keyboardType="number-pad"
+                        maxLength={1}
+                        ref={input5Ref}
+                        onChangeText={(value) => {
+                            setFifthDigit(value)
+                            handleInputChange(value, input6Ref)
+                        }}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setSixthDigit}
+                        value={sixthDigit}
+                        keyboardType="number-pad"
+                        maxLength={1}
+                        ref={input6Ref}
                     />
                 </View>
                 <TouchableOpacity style={styles.resendOpt}>
                     <Text style={[styles.text, styles.resendText]}>Resend Code</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.login}>
+                <TouchableOpacity style={styles.login} onPress={() => fetchOTP()}>
                     <Text style={styles.loginText}>verify</Text>
                 </TouchableOpacity>
             </SafeAreaView>
@@ -160,7 +218,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     input: {
-        width: "15%",
+        width: "10%",
         borderBottomWidth: 2,
         textAlign: "center",
         fontSize: 20

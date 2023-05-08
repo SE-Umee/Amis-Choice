@@ -20,7 +20,6 @@ const LoginScreen = () => {
             email: email,
             password: password
         }))
-
         navigation.navigate("CheckOut")
         // if (data.statusCode === 200) {
         //     cartStore.setUser(data)
@@ -42,7 +41,7 @@ const LoginScreen = () => {
         }))
 
         if (data.statusCode === 200) {
-            navigation.navigate("ForgotPassword")
+            navigation.navigate("ForgotPassword", { email })
         }
         else {
             Alert.alert("User Dose't exist")

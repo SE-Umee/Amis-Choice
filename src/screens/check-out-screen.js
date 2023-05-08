@@ -251,7 +251,7 @@ const CheckOutScreen = () => {
                             <Text style={styles.totalAmount}>Rs. {bill}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.placeOrderBtn} onPress={() => navigation.navigate("OrderSuccess")}>
+                    <TouchableOpacity style={styles.placeOrderBtn} onPress={() => navigation.navigate("OrderSuccess", { address, phone })}>
                         <Text style={styles.placeOrderBtnText}>Place Order</Text>
                     </TouchableOpacity>
                 </ScrollView>
