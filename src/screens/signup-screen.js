@@ -7,6 +7,7 @@ import Octicons from "react-native-vector-icons/Octicons";
 import Feather from "react-native-vector-icons/Feather";
 import { useNavigation } from '@react-navigation/native';
 import { fetchPost } from '../utils/fetch-api';
+import { CartStore } from '../store/cart-store';
 
 const SignupScreen = () => {
     const navigation = useNavigation();
@@ -15,7 +16,7 @@ const SignupScreen = () => {
     const [phoneNo, setPhoneNo] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
+    const cartStore = CartStore.useContainer()
 
     const fetchUser = async () => {
         const data = await fetchPost("/client/signup", JSON.stringify({
@@ -25,11 +26,6 @@ const SignupScreen = () => {
             phone: phoneNo,
             photoURL: "xyz.pnj"
         }))
-
-        console.log('====================================');
-        console.log(data);
-        console.log('====================================');
-
         cartStore.setUser(data)
 
     };

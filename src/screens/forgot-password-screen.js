@@ -48,6 +48,7 @@ const ForgotPasswordScreen = ({ route }) => {
             email: email,
             otp: otp
         }))
+
         navigation.navigate("ResetPassword", { otp, data })
     };
 

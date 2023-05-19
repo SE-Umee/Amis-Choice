@@ -18,6 +18,7 @@ import { fetchGet, fetchPost } from '../utils/fetch-api';
 import { CartStore } from '../store/cart-store';
 import BestSellingCard from '../components/best-selling-card';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import HeaderCart from '../components/header-cart';
 const HomeScreen = () => {
     const navigation = useNavigation();
     const [category, setCategory] = useState([]);
@@ -74,8 +75,10 @@ const HomeScreen = () => {
 
     const getCartData = async () => {
         try {
-            const cart = await AsyncStorage.getItem('@cart')
+            const cart = await AsyncStorage.getItem('@cart');
+            const user = await AsyncStorage.getItem("@user")
             cartStore.setCart(JSON.parse(cart))
+            cartStore.setUser(JSON.parse(user))
         } catch (e) {
             alert('Failed to save the data to the storage')
         }
@@ -97,12 +100,13 @@ const HomeScreen = () => {
                             </View>
                             <Text style={styles.topName}>Ami’s Choice</Text>
                         </View>
-                        <TouchableOpacity style={styles.topRightView} onPress={() => navigation.navigate("Cart")}>
+                        {/* <TouchableOpacity style={styles.topRightView} onPress={() => navigation.navigate("Cart")}>
                             <Image source={require("../components/icons/groceryCart.png")} />
                             <View style={styles.topQuantity}>
                                 <Text style={styles.topQuantityText}>{cartStore.cart?.length}</Text>
                             </View>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
+                        <HeaderCart />
                     </View>
                     <View style={styles.searchView}>
                         <AntDesign name="search1" size={24} />
@@ -125,14 +129,16 @@ const HomeScreen = () => {
                                         <Text style={styles.offerName}>Ramadan Offers</Text>
                                         <Text style={styles.offer}>Get 25%</Text>
                                         <TouchableOpacity style={styles.getOffer}>
-                                            <Text>Grab Offer</Text>
+                                            <Text style={{ color: Colors.greenColor }}>Grab Offer</Text>
                                         </TouchableOpacity>
                                     </View>
+
+
                                 </ImageBackground>
                             </View>
                         }
-                        sliderWidth={380}
-                        itemWidth={360}
+                        sliderWidth={350}
+                        itemWidth={320}
                     />
                 </View>
                 <View style={styles.categories}>
@@ -186,7 +192,7 @@ const HomeScreen = () => {
                             <Text style={styles.seeAllText}>See all</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ flex: 0.9 }}>
+                    <View style={{ flex: 0.9, marginBottom: '20%' }}>
                         <FlatList
                             numColumns={2}
                             data={searchData?.result?.rows}
@@ -287,7 +293,7 @@ const styles = StyleSheet.create({
     },
     carousel: {
         flex: 0.2,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     carouselCard: {
         backgroundColor: '#fff',

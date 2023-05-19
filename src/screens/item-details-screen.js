@@ -7,6 +7,7 @@ import StarRating from 'react-native-star-rating';
 import { useNavigation } from '@react-navigation/native';
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { CartStore } from '../store/cart-store';
+import HeaderCart from '../components/header-cart';
 const ItemDetailsScreen = ({ route }) => {
     const { item } = route.params;
     const navigation = useNavigation();
@@ -64,12 +65,13 @@ const ItemDetailsScreen = ({ route }) => {
                             <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
                                 <AntDesign name="left" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.cartIconView} onPress={() => navigation.navigate("Cart")}>
+                            {/* <TouchableOpacity style={styles.cartIconView} onPress={() => navigation.navigate("Cart")}>
                                 <Image source={require("../components/icons/groceryCart.png")} height={20} width={20} />
                                 <View style={styles.topQuantity}>
                                     <Text style={styles.topQuantityText}>{cartStore.cart.length}</Text>
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
+                            <HeaderCart />
                         </View>
                         <View style={{ alignSelf: "center", height: "70%", width: '100%', alignItems: 'center', justifyContent: "flex-end" }}>
                             <Carousel
@@ -112,7 +114,7 @@ const ItemDetailsScreen = ({ route }) => {
                     </ImageBackground>
                 </View>
                 <View style={{ flex: 0.5 }}>
-                    <ScrollView contentContainerStyle={{ flex: 1, paddingHorizontal: '2%' }}>
+                    <ScrollView contentContainerStyle={{ paddingHorizontal: '2%' }}>
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={styles.itemName}>{item.title}</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', width: 110, justifyContent: 'space-between' }}>
@@ -151,11 +153,12 @@ const ItemDetailsScreen = ({ route }) => {
                             </View>
                             <Text style={[styles.description, { paddingRight: "15%" }]}>Very nice packing, Nice products Highly Recommended.</Text>
                         </View>
+                        <TouchableOpacity style={!itemIsInCart ? styles.addCartBtn : [styles.addCartBtn, { backgroundColor: Colors.gray }]} onPress={() => { isItemInCart(item) }}>
+                            <Text style={styles.addCartText}>Add Cart</Text>
+                        </TouchableOpacity>
                     </ScrollView>
                 </View>
-                <TouchableOpacity style={!itemIsInCart ? styles.addCartBtn : [styles.addCartBtn, { backgroundColor: Colors.gray }]} onPress={() => { isItemInCart(item) }}>
-                    <Text style={styles.addCartText}>Add Cart</Text>
-                </TouchableOpacity>
+
             </SafeAreaView>
         </View>
     )
@@ -320,10 +323,8 @@ const styles = StyleSheet.create({
         paddingVertical: '3%',
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'absolute',
-        bottom: 15,
-        left: 0,
-        right: 0,
+        marginTop: '20%',
+        marginBottom: '30%',
         borderRadius: 100
     },
     addCartText: {

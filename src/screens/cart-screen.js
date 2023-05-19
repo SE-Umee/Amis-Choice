@@ -36,7 +36,8 @@ const CartScreen = () => {
                     </TouchableOpacity>
                     <Text style={styles.topHeadingText}>Cart</Text>
                 </View>
-                <ScrollView style={styles.cartItems}>
+                <View style={styles.cartItems}>
+                    {/* <ScrollView contentContainerStyle={{ paddingHorizontal: '2%' }}> */}
                     <FlatList
                         data={cartStore.cart}
                         renderItem={({ item }) => {
@@ -72,10 +73,12 @@ const CartScreen = () => {
                             <Text style={styles.totalAmount}>Rs. {discount}</Text>
                         </View>
                     </View>
-                </ScrollView>
-                <TouchableOpacity style={styles.checkOutButn} onPress={() => navigation.navigate("LogIn")}>
-                    <Text style={styles.checkOutText}>Check out</Text>
-                </TouchableOpacity>
+
+                    {/* </ScrollView> */}
+                    <TouchableOpacity style={styles.checkOutButn} onPress={() => { Object.keys(cartStore.user).length ? navigation.navigate("CheckOut") : navigation.navigate("LogIn") }}>
+                        <Text style={styles.checkOutText}>Check out</Text>
+                    </TouchableOpacity>
+                </View>
             </SafeAreaView>
         </View>
     )

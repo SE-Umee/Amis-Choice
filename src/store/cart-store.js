@@ -10,6 +10,7 @@ const cartStore = () => {
     const saveCartData = async () => {
         try {
             await AsyncStorage.setItem('@cart', JSON.stringify(cart))
+            await AsyncStorage.setItem("@user", JSON.stringify(user))
         } catch (e) {
             alert('Failed to save the data to the storage')
         }
@@ -17,7 +18,7 @@ const cartStore = () => {
 
     useEffect(() => {
         saveCartData();
-    }, [cart]);
+    }, [cart, user]);
 
     return {
         cart,

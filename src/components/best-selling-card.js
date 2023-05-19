@@ -63,7 +63,11 @@ const BestSellingCard = ({ item }) => {
                     <Text style={styles.outOfStockText}>Out of stock</Text>
                 </View>
             }
-            <Image source={{ uri: item?.productImages[0]?.url }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
+            {!item.productImages[0]?.url ?
+                <Image source={{ uri: "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
+                :
+                <Image source={{ uri: item?.productImages[0]?.url }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
+            }
             <Text style={styles.bestSellingName}>{item.title}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingVertical: '4%' }}>
                 <Text style={styles.quantity}>{item.quantity}kg</Text>
