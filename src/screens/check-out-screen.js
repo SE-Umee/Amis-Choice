@@ -1,4 +1,4 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Colors } from '../assets/styles/colors'
@@ -10,6 +10,7 @@ import { CartStore } from '../store/cart-store'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import CheckoutItemCard from '../components/checkout-item-card'
+
 
 
 const CheckOutScreen = () => {
@@ -26,7 +27,8 @@ const CheckOutScreen = () => {
     const [deliveryType, setDeliveryType] = useState("Urgent");
     const [deliveryCharges, setDeliveryCharges] = useState(200);
     const [subTotal, setSubTotal] = useState(0);
-    const [bill, setTotalBill] = useState(0)
+    const [bill, setTotalBill] = useState(0);
+    const [product, setProduct] = useState([]);
 
     const radioButton = () => {
         setRadioBtn(!radioBtn)
@@ -41,6 +43,40 @@ const CheckOutScreen = () => {
         }
 
     }
+    const createOrder = async () => {
+
+        let response = await fetch(`http://192.168.18.86:3002/api/order/add`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${cartStore.user.result.tokenInfo}`,
+            },
+            body: JSON.stringify({
+                address: address,
+                phone: phone,
+                city: "Islamabad",
+                items: product,
+            })
+        });
+        let jsonResponse = await response.json();
+
+        if (jsonResponse.statusCode === 200) {
+            navigation.navigate("OrderSuccess", { address, phone })
+        }
+        else {
+            Alert.alert("Order can't placed")
+        }
+    };
+
+    const itemInCart = () => {
+        for (var i = 0; i < cartStore.cart.length; ++i) {
+            product.push({
+                quantity: cartStore.cart[i]?.numberOfItem,
+                productId: cartStore.cart[i]?.id,
+            })
+        }
+    }
 
     const cal_Total = () => {
         let total = cartStore.cart.reduce(
@@ -54,6 +90,8 @@ const CheckOutScreen = () => {
 
     useEffect(() => {
         cal_Total()
+        itemInCart()
+
     }, [cartStore.cart])
 
     const totalBill = () => {
@@ -251,7 +289,7 @@ const CheckOutScreen = () => {
                             <Text style={styles.totalAmount}>Rs. {bill}</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.placeOrderBtn} onPress={() => navigation.navigate("OrderSuccess", { address, phone })}>
+                    <TouchableOpacity style={styles.placeOrderBtn} onPress={() => createOrder()}>
                         <Text style={styles.placeOrderBtnText}>Place Order</Text>
                     </TouchableOpacity>
                 </ScrollView>

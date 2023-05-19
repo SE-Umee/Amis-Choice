@@ -34,12 +34,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: '5%',
         marginTop: '2%'
     },
-    line: {
-        backgroundColor: "#F1F1F5",
-        height: 2,
-        marginTop: '5%',
-        marginBottom: '5%'
-    },
     itemName: {
         color: Colors.contentText,
         fontWeight: '700',

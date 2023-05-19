@@ -20,17 +20,13 @@ const LoginScreen = () => {
             email: email,
             password: password
         }))
-        navigation.navigate("CheckOut")
-        // if (data.statusCode === 200) {
-        //     cartStore.setUser(data)
-        //     navigation.navigate("CheckOut")
-        // }
-        // else {
-        //     Alert.alert("Email or Password are incorrect ")
-        // }
-
-
-
+        if (data.statusCode === 200) {
+            cartStore.setUser(data)
+            navigation.navigate("CheckOut")
+        }
+        else {
+            Alert.alert("Email or Password are incorrect ")
+        }
 
     };
 
@@ -39,7 +35,6 @@ const LoginScreen = () => {
         const data = await fetchPost("/client/forget-password", JSON.stringify({
             email: email,
         }))
-
         if (data.statusCode === 200) {
             navigation.navigate("ForgotPassword", { email })
         }
