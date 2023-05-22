@@ -9,11 +9,13 @@ import {
     FlatList
 } from 'react-native'
 import React, { useState } from 'react'
-import AntDesign from "react-native-vector-icons/AntDesign"
 import { Colors } from '../assets/styles/colors'
 import { useNavigation } from '@react-navigation/native'
 import { CartStore } from '../store/cart-store'
 import CartItemCard from '../components/cart-item-card'
+import BackButton from '../components/back-button'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 const CartScreen = () => {
     const navigation = useNavigation();
@@ -31,13 +33,10 @@ const CartScreen = () => {
         <View style={styles.maiaContainer}>
             <SafeAreaView style={styles.maiaContainer}>
                 <View style={styles.topIconView}>
-                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                    <BackButton />
                     <Text style={styles.topHeadingText}>Cart</Text>
                 </View>
                 <View style={styles.cartItems}>
-                    {/* <ScrollView contentContainerStyle={{ paddingHorizontal: '2%' }}> */}
                     <FlatList
                         data={cartStore.cart}
                         renderItem={({ item }) => {
@@ -74,7 +73,6 @@ const CartScreen = () => {
                         </View>
                     </View>
 
-                    {/* </ScrollView> */}
                     <TouchableOpacity style={styles.checkOutButn} onPress={() => { Object.keys(cartStore.user).length ? navigation.navigate("CheckOut") : navigation.navigate("LogIn") }}>
                         <Text style={styles.checkOutText}>Check out</Text>
                     </TouchableOpacity>
@@ -98,18 +96,9 @@ const styles = StyleSheet.create({
         marginTop: '2%',
         alignItems: 'center',
     },
-    BackArrow: {
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#F1F1F5"
-    },
     topHeadingText: {
         color: Colors.contentText,
-        fontSize: 20,
+        fontSize: hp('3%'),
         fontWeight: '700',
         lineHeight: 26.04,
         marginLeft: '35%'
@@ -117,20 +106,20 @@ const styles = StyleSheet.create({
     cartItems: {
         flex: 0.93,
     },
-    quantityText: {
-        color: Colors.contentText,
-        fontWeight: '700',
-        fontSize: 18,
-        lineHeight: 23.44,
-        paddingHorizontal: '4%'
-    },
     addQuantity: {
-        height: 36,
-        width: 36,
+        height: hp("5%"),
+        width: wp("9%"),
         borderRadius: 100,
         backgroundColor: '#F3F5F7',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    quantityText: {
+        color: Colors.contentText,
+        fontWeight: '700',
+        fontSize: hp('2.5%'),
+        lineHeight: 23.44,
+        paddingHorizontal: '4%'
     },
     cartItem: {
         flexDirection: "row",
@@ -141,27 +130,27 @@ const styles = StyleSheet.create({
     },
     line: {
         backgroundColor: "#F1F1F5",
-        height: 2,
+        height: hp('0.2%'),
         marginTop: '5%',
         marginBottom: '5%'
     },
     itemName: {
         color: Colors.contentText,
         fontWeight: '700',
-        fontSize: 16,
+        fontSize: hp('2.3%'),
         lineHeight: 20.83,
     },
     quantity: {
         color: Colors.redText,
         fontWeight: '700',
-        fontSize: 16,
+        fontSize: hp('2.3%'),
         lineHeight: 20.83,
     },
     receipt: {
         backgroundColor: '#fff',
         alignSelf: 'center',
-        width: 340,
-        height: 140,
+        height: hp("20%"),
+        width: wp("90%"),
         borderRadius: 16,
         paddingHorizontal: '5%',
         marginTop: "5%",
@@ -181,31 +170,31 @@ const styles = StyleSheet.create({
     subTotalText: {
         color: Colors.textColor,
         fontWeight: '500',
-        fontSize: 12,
+        fontSize: hp('1.7%'),
         lineHeight: 15.62,
     },
     subTotalAmount: {
         color: Colors.textColor,
         fontWeight: '700',
-        fontSize: 12,
+        fontSize: hp('1.7%'),
         lineHeight: 15.62,
     },
     discountText: {
         color: Colors.textColor,
         fontWeight: '400',
-        fontSize: 12,
+        fontSize: hp('1.7%'),
         lineHeight: 15.62,
     },
     totalText: {
         color: Colors.redText,
         fontWeight: '700',
-        fontSize: 12,
+        fontSize: hp('1.7%'),
         lineHeight: 15.62,
     },
     totalAmount: {
         color: Colors.redText,
         fontWeight: '700',
-        fontSize: 16,
+        fontSize: hp('2.3%'),
         lineHeight: 20.83,
     },
     checkOutButn: {
@@ -221,7 +210,7 @@ const styles = StyleSheet.create({
         borderRadius: 100
     },
     checkOutText: {
-        fontSize: 16,
+        fontSize: hp('2.3%'),
         fontWeight: "700",
         lineHeight: 20.83,
         color: "#fff"

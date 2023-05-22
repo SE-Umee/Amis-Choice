@@ -4,6 +4,8 @@ import { Colors } from '../assets/styles/colors';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { CartStore } from '../store/cart-store';
 import { useNavigation } from '@react-navigation/native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
 
 const BestSellingCard = ({ item }) => {
     const navigation = useNavigation();
@@ -81,7 +83,6 @@ const BestSellingCard = ({ item }) => {
             </View>
             <TouchableOpacity style={item.quantity > 0 && !itemIsInCart ? styles.addButton : [styles.addButton, { backgroundColor: Colors.gray }]} onPress={() => {
                 isItemInCart(item)
-
             }}>
                 <MaterialIcons name="add" size={24} color="#fff" />
             </TouchableOpacity>
@@ -94,15 +95,18 @@ export default BestSellingCard
 const styles = StyleSheet.create({
     bestSellingCard: {
         backgroundColor: '#F3F5F7',
-        width: 163,
-        height: 236,
+        // width: 163,
+        // height: 236,
+        height: hp("35%"),
+        width: wp("40%"),
         borderRadius: 16,
         marginRight: '5%',
         marginBottom: '10%',
     },
     stockView: {
         backgroundColor: "#b7f7cc",
-        width: '45%',
+        // width: '45%',
+        width: wp("15%"),
         alignSelf: 'flex-end',
         borderRadius: 100,
         paddingVertical: "2%",
@@ -113,12 +117,14 @@ const styles = StyleSheet.create({
     stockText: {
         color: Colors.greenColor,
         fontWeight: '400',
-        fontSize: 10,
+        fontSize: hp('1.5%'),
+        // fontSize: 10,
         lineHeight: 13.44
     },
     outOfStockView: {
         backgroundColor: "#ff66664D",
-        width: '45%',
+        // width: '45%',
+        width: wp("15%"),
         alignSelf: 'flex-end',
         borderRadius: 100,
         paddingVertical: "2%",
@@ -129,13 +135,15 @@ const styles = StyleSheet.create({
     outOfStockText: {
         color: Colors.redButton,
         fontWeight: '400',
-        fontSize: 10,
+        // fontSize: 10,
+        fontSize: hp('1.5%'),
         lineHeight: 13.44
     },
     bestSellingName: {
         color: Colors.contentText,
         fontWeight: '700',
-        fontSize: 14,
+        // fontSize: 14,
+        fontSize: hp('2%'),
         lineHeight: 18.23,
         marginLeft: "5%",
         marginTop: '2%'
@@ -143,7 +151,8 @@ const styles = StyleSheet.create({
     quantity: {
         color: Colors.contentText,
         fontWeight: '700',
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2.3%'),
         lineHeight: 20.23,
     },
     percentage: {
@@ -157,7 +166,8 @@ const styles = StyleSheet.create({
     percentageNo: {
         color: "#FF324B",
         fontWeight: '700',
-        fontSize: 8,
+        // fontSize: 8,
+        fontSize: hp('1.1%'),
         lineHeight: 10.42,
     },
     percentagePrice: {
@@ -169,13 +179,16 @@ const styles = StyleSheet.create({
     originalPrice: {
         color: Colors.contentText,
         fontWeight: '400',
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2.3%'),
         lineHeight: 20.83,
         textDecorationLine: "line-through"
     },
     addButton: {
-        width: 30,
-        height: 30,
+        // width: 30,
+        // height: 30,
+        height: hp("4.5%"),
+        width: wp("8%"),
         backgroundColor: Colors.greenColor,
         position: 'absolute',
         bottom: -10,
@@ -183,11 +196,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 100,
         justifyContent: 'center'
-    },
-    addIcon: {
-        color: "#FF324B",
-        fontWeight: '700',
-        fontSize: 20,
-        lineHeight: 20.23,
     },
 })
