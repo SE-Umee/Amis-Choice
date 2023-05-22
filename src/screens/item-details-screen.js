@@ -8,6 +8,9 @@ import { useNavigation } from '@react-navigation/native';
 import Carousel, { Pagination } from 'react-native-snap-carousel'
 import { CartStore } from '../store/cart-store';
 import HeaderCart from '../components/header-cart';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import BackButton from '../components/back-button';
+
 const ItemDetailsScreen = ({ route }) => {
     const { item } = route.params;
     const navigation = useNavigation();
@@ -62,15 +65,7 @@ const ItemDetailsScreen = ({ route }) => {
                 <View style={{ flex: 0.5 }}>
                     <ImageBackground source={require("../assets/images/sliderBG.png")} resizeMode="stretch" style={{ flex: 1, }}>
                         <View style={styles.topIconView}>
-                            <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                                <AntDesign name="left" />
-                            </TouchableOpacity>
-                            {/* <TouchableOpacity style={styles.cartIconView} onPress={() => navigation.navigate("Cart")}>
-                                <Image source={require("../components/icons/groceryCart.png")} height={20} width={20} />
-                                <View style={styles.topQuantity}>
-                                    <Text style={styles.topQuantityText}>{cartStore.cart.length}</Text>
-                                </View>
-                            </TouchableOpacity> */}
+                            <BackButton />
                             <HeaderCart />
                         </View>
                         <View style={{ alignSelf: "center", height: "70%", width: '100%', alignItems: 'center', justifyContent: "flex-end" }}>
@@ -180,42 +175,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginTop: '2%'
     },
-    BackArrow: {
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#F1F1F5"
-    },
-    cartIconView: {
-        width: 44,
-        height: 44,
-        backgroundColor: '#fff',
-        borderRadius: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    topQuantity: {
-        height: 15,
-        width: 15,
-        position: "absolute",
-        right: -5,
-        top: 2,
-        backgroundColor: Colors.greenColor,
-        borderRadius: 100,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    topQuantityText: {
-        color: '#fff',
-        padding: '2%',
-        fontSize: 10,
-        fontWeight: '700',
-        lineHeight: 13,
-        alignSelf: 'center'
-    },
     stockView: {
         backgroundColor: "#b7f7cc",
         alignSelf: "center",
@@ -227,7 +186,7 @@ const styles = StyleSheet.create({
     stockText: {
         color: Colors.greenColor,
         fontWeight: '400',
-        fontSize: 10,
+        fontSize: hp('1.5%'),
         lineHeight: 13.44
     },
     outOfStockView: {
@@ -241,31 +200,30 @@ const styles = StyleSheet.create({
     outOfStockText: {
         color: Colors.redButton,
         fontWeight: '400',
-        fontSize: 10,
+        fontSize: hp('1.5%'),
         lineHeight: 13.44
     },
     itemName: {
         color: Colors.headingText,
         fontWeight: '700',
-        fontSize: 24,
+        // fontSize: 24,
+        fontSize: hp('3.3%'),
         lineHeight: 31.25
     },
     addQuantity: {
-        height: 36,
-        width: 36,
+        // height: 36,
+        // width: 36,
+        height: hp("5%"),
+        width: wp("9%"),
         borderRadius: 100,
         backgroundColor: '#F3F5F7',
         alignItems: 'center',
         justifyContent: 'center'
     },
-    addQuantityText: {
-        fontSize: 20,
-        color: '#979899'
-    },
     quantityText: {
         color: Colors.contentText,
         fontWeight: '700',
-        fontSize: 18,
+        fontSize: hp('2.5%'),
         lineHeight: 23.44,
         paddingHorizontal: '4%'
     },
@@ -275,7 +233,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     weight: {
-        fontSize: 20,
+        fontSize: hp('3%'),
         fontWeight: "700",
         lineHeight: 26.04,
         color: Colors.redText
@@ -285,14 +243,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     discountPrice: {
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2.3%'),
         fontWeight: "700",
         lineHeight: 20.83,
         color: Colors.redText,
         paddingRight: '2%'
     },
     originalPrice: {
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2.3%'),
         fontWeight: "400",
         lineHeight: 20.83,
         color: "#575C55",
@@ -303,7 +263,8 @@ const styles = StyleSheet.create({
         marginTop: '2%'
     },
     description: {
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2.3%'),
         fontWeight: "500",
         lineHeight: 20.83,
         color: Colors.gray
@@ -312,7 +273,8 @@ const styles = StyleSheet.create({
         marginTop: '10%'
     },
     reviewText: {
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2.3%'),
         fontWeight: "700",
         lineHeight: 20.83,
         color: Colors.contentText
@@ -323,12 +285,13 @@ const styles = StyleSheet.create({
         paddingVertical: '3%',
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: '20%',
-        marginBottom: '30%',
+        marginTop: '10%',
+        // marginBottom: '3%',
         borderRadius: 100
     },
     addCartText: {
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2.3%'),
         fontWeight: "700",
         lineHeight: 20.83,
         color: "#fff"
