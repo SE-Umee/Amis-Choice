@@ -1,9 +1,9 @@
-import { Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Colors } from '../assets/styles/colors'
-import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 import { useNavigation } from '@react-navigation/native';
+import BackButton from '../components/back-button';
 
 const PlaceOrderSuccessScreen = ({ route }) => {
   const { address, phone } = route.params;
@@ -11,9 +11,12 @@ const PlaceOrderSuccessScreen = ({ route }) => {
   return (
     <View style={styles.mainContainer}>
       <SafeAreaView style={styles.mainContainer}>
-        <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-          <AntDesign name="left" />
-        </TouchableOpacity>
+        <View style={{
+          marginHorizontal: '5%',
+          marginTop: '2%'
+        }}>
+          <BackButton />
+        </View>
         <View style={styles.innerMainContainer}>
           <View style={styles.circle}>
             <Entypo name="check" color="#fff" size={70} />
@@ -63,17 +66,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: '7%',
     marginTop: '10%'
-  },
-  BackArrow: {
-    borderWidth: 0.1,
-    borderRadius: 100,
-    height: 44,
-    width: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: "#F1F1F5",
-    marginHorizontal: '5%',
-    marginTop: '2%'
   },
   circle: {
     height: 95,

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Animated,
   Image,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -27,6 +28,8 @@ import ResetPasswordScreen from './src/screens/reset-password-screen';
 import OrderHistoryScreen from './src/screens/order-history-screen';
 import MyOrderScreen from './src/screens/my-order-screen';
 import UpdateProfileScreen from './src/screens/update-profile-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AllCategoryScreen from './src/screens/all-category-screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +39,7 @@ const Home = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name='Bottom' component={BottomBar} />
+      <Stack.Screen name='AllCategory' component={AllCategoryScreen} />
       <Stack.Screen name='CategoryItems' component={CategoryItemsScreen} />
       <Stack.Screen name='ItemDetails' component={ItemDetailsScreen} />
       <Stack.Screen name='Cart' component={CartScreen} />
@@ -50,14 +54,12 @@ const Home = () => {
     ;
 };
 
-
 const Cart = () => {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name='cart' component={CartScreen} />
-    </Stack.Navigator>
-  )
-}
+  return <View style={styles.container} >
+    <CartScreen />
+  </View>
+    ;
+};
 
 const _renderIcon = (routeName, selectedTab) => {
   let icon = '';
@@ -100,15 +102,17 @@ const renderTabBar = ({ routeName, selectedTab, navigate }) => {
 };
 
 
-const BottomBar = () => {
 
+const BottomBar = () => {
   // const cartStore = CartStore.useContainer();
+  const [cart, setCart] = useState(0);
+
   return (
     <CurvedBottomBar.Navigator
       type="DOWN"
       style={styles.bottomBar}
       shadowStyle={styles.shawdow}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true }}
       height={55}
       circleWidth={50}
       bgColor="white"
@@ -118,10 +122,10 @@ const BottomBar = () => {
         <Animated.View style={styles.btnCircleUp}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => <Cart />}
+            onPress={() => navigate(Cart)}
           >
             <Image source={require("./src/components/icons/cart-icon.png")} />
-            <View style={{
+            {/* <View style={{
               height: 25,
               width: 25,
               backgroundColor: "red",
@@ -130,10 +134,12 @@ const BottomBar = () => {
               top: 8,
               left: 28,
               borderWidth: 2,
-              borderColor: '#fff'
+              borderColor: '#fff',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
-              {/* <Text>{cartStore?.cart?.length}</Text> */}
-            </View>
+              <Text style={{ color: '#fff' }}>{cart}</Text>
+            </View> */}
           </TouchableOpacity>
         </Animated.View>
       )}
@@ -188,9 +194,6 @@ const Profile = () => {
 };
 
 export default function App() {
-
-
-
   return (
     <PaperProvider>
       <CartStore.Provider>
@@ -225,7 +228,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   bottomBar: {
-    height: 80,
+    // height: 10,
   },
   btnCircleUp: {
     width: 60,

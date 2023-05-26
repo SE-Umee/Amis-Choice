@@ -15,6 +15,7 @@ const ItemDetailsScreen = ({ route }) => {
     const { item } = route.params;
     const navigation = useNavigation();
     const [index, setIndex] = useState(0);
+    const [itemIndex, setItemIndex] = useState()
     const [quantity, setQuantity] = useState(1)
     const isCarousel = useRef(null);
     const cartStore = CartStore.useContainer();
@@ -45,7 +46,11 @@ const ItemDetailsScreen = ({ route }) => {
     }
 
     const isItemInCartCheck = (itemId) => {
-        if (cartStore.cart.find((product) => product?.id == itemId)) {
+        const item = cartStore.cart.find((product) => product?.id == itemId)
+        if (item) {
+            // const index = cartStore.cart.indexOf(item);
+            // setItemIndex(index)
+            // setQuantity(cartStore.cart[index].numberOfItem)
             setItemIsInCart(true)
         } else {
             setItemIsInCart(false)
@@ -55,7 +60,7 @@ const ItemDetailsScreen = ({ route }) => {
 
     useEffect(() => {
         isItemInCartCheck(item.id)
-    }, [cartStore.cart])
+    }, [cartStore.cart, cartStore.cart[itemIndex]?.numberOfItem])
 
 
 
@@ -82,7 +87,7 @@ const ItemDetailsScreen = ({ route }) => {
                                 onSnapToItem={(index) => setIndex(index)}
                             />
                             <Pagination
-                                dotsLength={item.productImages.length}
+                                dotsLength={item.productImages?.length}
                                 activeDotIndex={index}
                                 carouselRef={isCarousel}
                                 dotStyle={{
@@ -108,16 +113,25 @@ const ItemDetailsScreen = ({ route }) => {
                         }
                     </ImageBackground>
                 </View>
-                <View style={{ flex: 0.5 }}>
-                    <ScrollView contentContainerStyle={{ paddingHorizontal: '2%' }}>
+
+                <View style={{ flex: 0.5, padding: hp("2%"), paddingTop: hp('4%') }}>
+                    <ScrollView>
                         <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={styles.itemName}>{item.title}</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', width: 110, justifyContent: 'space-between' }}>
-                                <TouchableOpacity style={styles.addQuantity} onPress={() => setQuantity(quantity - 1)}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', width: wp('30%'), justifyContent: "space-around" }}>
+                                <TouchableOpacity
+                                    style={!itemIsInCart ? styles.addQuantity
+                                        : [styles.addQuantity, { backgroundColor: Colors.gray }]
+                                    }
+                                    onPress={() => { !itemIsInCart ? setQuantity(quantity - 1) : <></> }}>
                                     <Entypo name="minus" size={24} />
                                 </TouchableOpacity>
                                 <Text style={styles.quantityText}>{quantity}</Text>
-                                <TouchableOpacity style={[styles.addQuantity, { backgroundColor: Colors.greenColor }]} onPress={() => setQuantity(quantity + 1)}>
+                                <TouchableOpacity
+                                    style={!itemIsInCart ?
+                                        [styles.addQuantity, { backgroundColor: Colors.greenColor }]
+                                        : [styles.addQuantity, { backgroundColor: Colors.gray }]}
+                                    onPress={() => { !itemIsInCart ? setQuantity(quantity + 1) : <></> }}>
                                     <Entypo name="plus" size={24} />
                                 </TouchableOpacity>
                             </View>
@@ -207,14 +221,14 @@ const styles = StyleSheet.create({
         color: Colors.headingText,
         fontWeight: '700',
         // fontSize: 24,
-        fontSize: hp('3.3%'),
+        fontSize: hp('3%'),
         lineHeight: 31.25
     },
     addQuantity: {
         // height: 36,
         // width: 36,
         height: hp("5%"),
-        width: wp("9%"),
+        width: wp("9.5%"),
         borderRadius: 100,
         backgroundColor: '#F3F5F7',
         alignItems: 'center',
@@ -223,9 +237,9 @@ const styles = StyleSheet.create({
     quantityText: {
         color: Colors.contentText,
         fontWeight: '700',
-        fontSize: hp('2.5%'),
+        fontSize: hp('2%'),
         lineHeight: 23.44,
-        paddingHorizontal: '4%'
+        // paddingHorizontal: '4%'
     },
     weightPriceView: {
         flexDirection: "row",
@@ -233,7 +247,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     weight: {
-        fontSize: hp('3%'),
+        fontSize: hp('2.5%'),
         fontWeight: "700",
         lineHeight: 26.04,
         color: Colors.redText
@@ -244,7 +258,7 @@ const styles = StyleSheet.create({
     },
     discountPrice: {
         // fontSize: 16,
-        fontSize: hp('2.3%'),
+        fontSize: hp('2.2%'),
         fontWeight: "700",
         lineHeight: 20.83,
         color: Colors.redText,
@@ -252,7 +266,7 @@ const styles = StyleSheet.create({
     },
     originalPrice: {
         // fontSize: 16,
-        fontSize: hp('2.3%'),
+        fontSize: hp('2.2%'),
         fontWeight: "400",
         lineHeight: 20.83,
         color: "#575C55",
@@ -264,7 +278,7 @@ const styles = StyleSheet.create({
     },
     description: {
         // fontSize: 16,
-        fontSize: hp('2.3%'),
+        fontSize: hp('2%'),
         fontWeight: "500",
         lineHeight: 20.83,
         color: Colors.gray
@@ -274,7 +288,7 @@ const styles = StyleSheet.create({
     },
     reviewText: {
         // fontSize: 16,
-        fontSize: hp('2.3%'),
+        fontSize: hp('2%'),
         fontWeight: "700",
         lineHeight: 20.83,
         color: Colors.contentText

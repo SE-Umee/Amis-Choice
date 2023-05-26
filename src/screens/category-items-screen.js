@@ -1,19 +1,33 @@
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+    Alert,
+    FlatList,
+    Image,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    TextInput
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Colors } from '../assets/styles/colors'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useNavigation } from '@react-navigation/native';
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { CartStore } from '../store/cart-store';
 import BestSellingCard from '../components/best-selling-card';
 import { fetchPost } from "../utils/fetch-api"
 import HeaderCart from '../components/header-cart';
+import BackButton from '../components/back-button';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 const CategoryItemsScreen = ({ route }) => {
     const itemId = route?.params?.itemId;
     const navigation = useNavigation();
     const cartStore = CartStore.useContainer();
     const [product, setProduct] = useState([]);
+    const [filter, setFilter] = useState(false);
+    const [isSearch, setIsSearch] = useState(false);
+    const [search, setSearch] = useState([])
     const fetchProduct = async (id) => {
 
         if (!id) {
@@ -37,24 +51,26 @@ const CategoryItemsScreen = ({ route }) => {
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.topView}>
                     <View style={styles.topLeftView}>
-                        <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                            <AntDesign name="left" />
-                        </TouchableOpacity>
-                        <Text style={styles.categoryName}> {itemId ? product?.result?.title : "Categories"}</Text>
+                        <BackButton />
+                        {!isSearch ?
+                            <Text style={styles.categoryName}> {itemId ? product?.result?.title : "Categories"}</Text>
+                            :
+                            <TextInput
+                                placeholder='Search Product'
+                                placeholderTextColor={Colors.gray}
+                                value={search}
+                                onChangeText={setSearch}
+                                style={styles.searchInput}
+                            />
+                        }
                     </View>
                     <View style={styles.topRightView}>
-                        <TouchableOpacity style={styles.BackArrow}>
+                        <TouchableOpacity style={styles.BackArrow} onPress={() => setIsSearch(!isSearch)}>
                             <AntDesign name="search1" />
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.BackArrow, { marginHorizontal: '3%' }]}>
+                        <TouchableOpacity style={[styles.BackArrow, { marginHorizontal: '3%' }]} onPress={() => setFilter(!filter)}>
                             <Image source={require("../components/icons/filterIcon.png")} height={20} width={20} />
                         </TouchableOpacity>
-                        {/* <TouchableOpacity style={styles.cartIconView} onPress={() => navigation.navigate("Cart")}>
-                            <Image source={require("../components/icons/groceryCart.png")} height={20} width={20} />
-                            <View style={styles.topQuantity}>
-                                <Text style={styles.topQuantityText}>{cartStore.cart.length}</Text>
-                            </View>
-                        </TouchableOpacity> */}
                         <HeaderCart />
                     </View>
                 </View>
@@ -71,18 +87,32 @@ const CategoryItemsScreen = ({ route }) => {
                             }}
                         />
                         :
-                        <FlatList
-                            numColumns={2}
-                            data={product}
-                            showsVerticalScrollIndicator={false}
-                            renderItem={({ item }) => {
-                                return (
-                                    <BestSellingCard item={item} />
-                                )
-                            }}
-                        />
+                        <View style={{ marginBottom: '20%', }}>
+                            <FlatList
+                                numColumns={2}
+                                data={product}
+                                showsVerticalScrollIndicator={false}
+                                renderItem={({ item }) => {
+                                    return (
+                                        <BestSellingCard item={item} />
+                                    )
+                                }}
+                            />
+                        </View>
                     }
                 </View>
+                {filter ?
+                    <View style={styles.filters}>
+                        <TouchableOpacity style={styles.filtersBtn}>
+                            <Text style={styles.filtersText}>Low to Height Price</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.filtersBtn}>
+                            <Text style={styles.filtersText}>Height to Low Price</Text>
+                        </TouchableOpacity>
+                    </View>
+                    :
+                    <></>
+                }
             </SafeAreaView>
 
         </View>
@@ -102,6 +132,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: '3%',
+        marginTop: hp(1)
     },
     topLeftView: {
         flex: 1,
@@ -130,41 +161,35 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-end'
     },
-    cartIconView: {
-        width: 44,
-        height: 44,
-        backgroundColor: '#fff',
-        borderRadius: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    topQuantity: {
-        height: 15,
-        width: 15,
-        position: "absolute",
-        right: -5,
-        top: 2,
-        backgroundColor: Colors.greenColor,
-        borderRadius: 100,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    topQuantityText: {
-        color: '#fff',
-        padding: '2%',
-        fontSize: 10,
-        fontWeight: '700',
-        lineHeight: 13,
-        alignSelf: 'center'
-    },
     wholeItemsView: {
         flex: 0.93,
-        paddingHorizontal: '5%',
-        paddingBottom: '20%',
-        marginTop: '3%'
-        // justifyContent: 'center',
-        // alignItems: 'center'
+        paddingHorizontal: '8%',
+        marginTop: '4%'
     },
-
+    filters: {
+        position: 'absolute',
+        top: hp(7),
+        right: wp(7),
+        backgroundColor: "#fff",
+        paddingVertical: hp(2),
+        paddingHorizontal: wp(1),
+        borderRadius: 7
+    },
+    filtersBtn: {
+        marginTop: hp(1),
+    },
+    filtersText: {
+        fontSize: hp(1.5),
+        fontWeight: "700",
+        color: Colors.contentText
+    },
+    searchInput: {
+        backgroundColor: "#fff",
+        width: wp(44),
+        marginLeft: wp(1.5),
+        marginTop: hp(1),
+        borderRadius: 100,
+        paddingLeft: wp(3),
+    },
 
 })

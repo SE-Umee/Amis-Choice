@@ -7,7 +7,7 @@ import { CartStore } from '../store/cart-store';
 
 const CartItemCard = ({ item, setSubTotal, subTotal, setDiscount, discount }) => {
 
-    const [quantity, setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(item.numberOfItem);
     const cartStore = CartStore.useContainer();
 
 
@@ -95,7 +95,7 @@ const CartItemCard = ({ item, setSubTotal, subTotal, setDiscount, discount }) =>
                 <TouchableOpacity style={styles.addQuantity} onPress={() => decrement(item.id)}>
                     <Entypo name="minus" size={24} />
                 </TouchableOpacity>
-                <Text style={styles.quantityText}>{item.numberOfItem}</Text>
+                <Text style={styles.quantityText}>{quantity}</Text>
                 <TouchableOpacity style={[styles.addQuantity, { backgroundColor: Colors.greenColor }]} onPress={() => increment(item.id)}>
                     <Entypo name="plus" size={24} />
                 </TouchableOpacity>

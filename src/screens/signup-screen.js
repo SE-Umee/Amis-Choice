@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Colors } from '../assets/styles/colors'
 import { TextInput } from 'react-native-paper'
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -8,6 +8,8 @@ import Feather from "react-native-vector-icons/Feather";
 import { useNavigation } from '@react-navigation/native';
 import { fetchPost } from '../utils/fetch-api';
 import { CartStore } from '../store/cart-store';
+import BackButton from '../components/back-button';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const SignupScreen = () => {
     const navigation = useNavigation();
@@ -16,7 +18,33 @@ const SignupScreen = () => {
     const [phoneNo, setPhoneNo] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const cartStore = CartStore.useContainer()
+    const [emailValidated, setEmailValidated] = useState(false);
+    const [showPassword, setShowPassword] = useState(true);
+    const [showConformPassword, setShowConformPassword] = useState(true);
+    const cartStore = CartStore.useContainer();
+
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
+    const toggleConformPasswordVisibility = () => {
+        setShowConformPassword(!showConformPassword);
+    };
+
+    const emailValidation = () => {
+        const strongRegex = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
+
+        if (!strongRegex.test(email)) {
+            setEmailValidated(true)
+        }
+        else {
+            setEmailValidated(false)
+        }
+    }
+
+    useEffect(() => {
+        emailValidation()
+    }, [email])
 
     const fetchUser = async () => {
         const data = await fetchPost("/client/signup", JSON.stringify({
@@ -35,15 +63,13 @@ const SignupScreen = () => {
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <ScrollView>
-                    <View style={styles.headingView} >
-                        <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                            <AntDesign name="left" />
-                        </TouchableOpacity>
+                    <View style={styles.headingView}>
+                        <BackButton />
                         <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
                     </View>
                     <View style={styles.textView}>
                         <Text style={styles.headingText}> Sign Up</Text>
-                        <Text style={styles.text}>Already have an account? <Text style={styles.signInText}>SIGN IN </Text></Text>
+                        <Text style={styles.text}>Already have an account? <TouchableOpacity onPress={() => navigation.navigate("LogIn")}><Text style={styles.signInText}>SIGN IN </Text></TouchableOpacity></Text>
                     </View>
                     <View style={styles.textInputView}>
                         <TextInput
@@ -55,15 +81,31 @@ const SignupScreen = () => {
                             activeOutlineColor={Colors.greenColor}
                             left={<TextInput.Icon icon={() => <Octicons name="person" size={24} />} />}
                         />
-                        <TextInput
-                            label="Your Email"
-                            value={email}
-                            onChangeText={text => setEmail(text)}
-                            mode="outlined"
-                            style={styles.textInput}
-                            activeOutlineColor={Colors.greenColor}
-                            left={<TextInput.Icon icon="email-outline" />}
-                        />
+                        <View style={{
+                            width: wp("80%"),
+                            alignItems: 'center',
+                        }}>
+                            <TextInput
+                                label="Your Email"
+                                value={email}
+                                onChangeText={text => setEmail(text)}
+                                mode="outlined"
+                                style={styles.textInput}
+                                onFocus={() => emailValidation()}
+                                activeOutlineColor={Colors.greenColor}
+                                left={<TextInput.Icon icon="email-outline" />}
+                            />
+                            <View style={{
+                                alignSelf: 'flex-start',
+                                marginTop: hp(-1.2)
+                            }}>
+                                {
+                                    emailValidated ?
+                                        <Text style={{ color: "red" }}>Invalid Email</Text>
+                                        : <></>
+                                }
+                            </View>
+                        </View>
                         <TextInput
                             label="Phone Number"
                             value={phoneNo}
@@ -78,10 +120,10 @@ const SignupScreen = () => {
                             value={password}
                             onChangeText={text => setPassword(text)}
                             mode="outlined"
-                            secureTextEntry
+                            secureTextEntry={showPassword}
                             style={styles.textInput}
                             activeOutlineColor={Colors.greenColor}
-                            right={<TextInput.Icon icon="eye" color={((isTextInputFocused = false) => Colors.gray | undefined) | Colors.greenColor} />} lock
+                            right={<TextInput.Icon icon={showPassword ? "eye" : 'eye-off'} color={Colors.gray} onPress={togglePasswordVisibility} />}
                             left={<TextInput.Icon icon="lock" />}
                         />
                         <TextInput
@@ -89,10 +131,10 @@ const SignupScreen = () => {
                             value={confirmPassword}
                             onChangeText={text => setConfirmPassword(text)}
                             mode="outlined"
-                            secureTextEntry
+                            secureTextEntry={showConformPassword}
                             style={styles.textInput}
                             activeOutlineColor={Colors.greenColor}
-                            right={<TextInput.Icon icon="eye" color={((isTextInputFocused = false) => Colors.gray | undefined) | Colors.greenColor} />} lock
+                            right={<TextInput.Icon icon={showConformPassword ? "eye" : 'eye-off'} color={Colors.gray} onPress={toggleConformPasswordVisibility} />}
                             left={<TextInput.Icon icon="lock" />}
                         />
 
@@ -123,17 +165,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: "3%"
     },
-    BackArrow: {
-        position: 'absolute',
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        left: 0,
-        backgroundColor: "#F1F1F5"
-    },
+
     headingText: {
         fontSize: 25,
         fontWeight: '700',
@@ -149,7 +181,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
-        height: 40,
+        // height: 40,
         marginVertical: '2%',
         borderRadius: 8,
         shadowColor: "#575C55",

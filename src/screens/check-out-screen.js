@@ -10,7 +10,8 @@ import { CartStore } from '../store/cart-store'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import CheckoutItemCard from '../components/checkout-item-card'
-
+import BackButton from '../components/back-button'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 const CheckOutScreen = () => {
@@ -29,6 +30,7 @@ const CheckOutScreen = () => {
     const [subTotal, setSubTotal] = useState(0);
     const [bill, setTotalBill] = useState(0);
     const [product, setProduct] = useState([]);
+    const [emailValidated, setEmailValidated] = useState(false);
 
     const radioButton = () => {
         setRadioBtn(!radioBtn)
@@ -43,6 +45,23 @@ const CheckOutScreen = () => {
         }
 
     }
+
+
+    const emailValidation = () => {
+        const strongRegex = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
+
+        if (!strongRegex.test(email)) {
+            setEmailValidated(true)
+        }
+        else {
+            setEmailValidated(false)
+        }
+    }
+
+    useEffect(() => {
+        emailValidation()
+    }, [email])
+
     const createOrder = async () => {
 
         let response = await fetch(`http://192.168.18.86:3002/api/order/add`, {
@@ -108,7 +127,7 @@ const CheckOutScreen = () => {
             <SafeAreaView style={styles.mainContainer}>
                 <ScrollView>
                     <View style={styles.topIconView}>
-                        <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
+                        <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.navigate("Home")}>
                             <AntDesign name="left" />
                         </TouchableOpacity>
                         <Text style={styles.topHeadingText}>Checkout</Text>
@@ -144,15 +163,29 @@ const CheckOutScreen = () => {
                                     left={<TextInput.Icon icon={require('../components/icons/card_icon.png')} />}
                                 />
                             </View>
-                            <TextInput
-                                label="Your Email"
-                                value={email}
-                                onChangeText={text => setEmail(text)}
-                                mode="outlined"
-                                style={[styles.textInput, { width: "100%" }]}
-                                activeOutlineColor={Colors.textColor}
-                                left={<TextInput.Icon icon="email-outline" />}
-                            />
+                            <View>
+
+
+                                <TextInput
+                                    label="Your Email"
+                                    value={email}
+                                    onChangeText={text => setEmail(text)}
+                                    mode="outlined"
+                                    style={[styles.textInput, { width: "100%" }]}
+                                    activeOutlineColor={Colors.textColor}
+                                    left={<TextInput.Icon icon="email-outline" />}
+                                />
+                                <View style={{
+                                    alignSelf: 'flex-start',
+                                    marginTop: hp(-0.2)
+                                }}>
+                                    {
+                                        emailValidated ?
+                                            <Text style={{ color: "red" }}>Invalid Email</Text>
+                                            : <></>
+                                    }
+                                </View>
+                            </View>
                             <TextInput
                                 label="Phone number"
                                 value={phone}
@@ -182,6 +215,8 @@ const CheckOutScreen = () => {
                                 onChangeText={text => setProductNote(text)}
                                 mode="outlined"
                                 style={styles.productNote}
+                                returnKeyType={"done"}
+                                multiline={true}
                                 activeOutlineColor={Colors.textColor}
                             />
                         </View>
@@ -312,15 +347,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: '2%'
     },
-    BackArrow: {
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#F1F1F5"
-    },
     topHeadingText: {
         color: Colors.contentText,
         fontSize: 20,
@@ -356,7 +382,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '47%',
-        height: 46,
+        // height: 46,
         marginTop: '5%',
         backgroundColor: '#fff'
     },
@@ -372,10 +398,12 @@ const styles = StyleSheet.create({
 
     },
     productNote: {
-        width: '100%',
-        height: 70,
-        marginTop: '5%',
-        backgroundColor: '#fff'
+        width: wp(80),
+        minHeight: hp(10),
+        maxHeight: hp(20),
+        // marginTop: '5%',
+        backgroundColor: '#fff',
+        textAlignVertical: 'top'
     },
     cartItem: {
         flexDirection: "row",
@@ -483,5 +511,14 @@ const styles = StyleSheet.create({
         fontWeight: "700",
         lineHeight: 20.83,
         color: "#fff"
+    },
+    BackArrow: {
+        borderWidth: 0.1,
+        borderRadius: 100,
+        height: hp("5.5%"),
+        width: wp("11%"),
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#F1F1F5"
     },
 })

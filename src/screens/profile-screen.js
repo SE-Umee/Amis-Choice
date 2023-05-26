@@ -5,6 +5,7 @@ import AntDesign from "react-native-vector-icons/AntDesign"
 import { CartStore } from '../store/cart-store'
 import { useNavigation } from '@react-navigation/native'
 import OrderHistoryScreen from './order-history-screen'
+import BackButton from '../components/back-button'
 
 const ProfileScreen = () => {
     const cartStore = CartStore.useContainer();
@@ -35,14 +36,13 @@ const ProfileScreen = () => {
     const logOut = () => {
         cartStore.setUser({})
         setUser("")
+        navigation.navigate("LogIn")
     }
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.topIconView}>
-                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                    <BackButton />
                     <Text style={styles.topHeadingText}>Account Details</Text>
                 </View>
                 <View style={styles.wholeItemsView}>
@@ -106,15 +106,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingTop: '2%'
-    },
-    BackArrow: {
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#F1F1F5"
     },
     topHeadingText: {
         color: Colors.contentText,

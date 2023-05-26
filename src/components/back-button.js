@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     BackArrow: {
         borderWidth: 0.1,
         borderRadius: 100,
-        height: hp("6%"),
+        height: hp("5.5%"),
         width: wp("11%"),
         justifyContent: 'center',
         alignItems: 'center',

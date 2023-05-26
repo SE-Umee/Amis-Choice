@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, TextInpu
 import React, { useState, useRef } from 'react'
 import { Colors } from '../assets/styles/colors'
 import AntDesign from "react-native-vector-icons/AntDesign";
+import BackButton from '../components/back-button';
 
 const CreateAccountScreen = () => {
     const [firstDigit, setFirstDigit] = useState("");
@@ -20,10 +21,8 @@ const CreateAccountScreen = () => {
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
-                <View style={styles.headingView} >
-                    <TouchableOpacity style={styles.BackArrow}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                <View style={styles.headingView}>
+                    <BackButton />
                     <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
                 </View>
                 <View style={styles.textView}>
@@ -101,17 +100,6 @@ const styles = StyleSheet.create({
     logoImage: {
         alignSelf: 'center',
         marginTop: "3%"
-    },
-    BackArrow: {
-        position: 'absolute',
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 30,
-        width: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        left: 0,
-        backgroundColor: "#F1F1F5"
     },
     headingText: {
         fontSize: 25,
