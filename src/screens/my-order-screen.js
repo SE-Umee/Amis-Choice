@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import CheckoutItemCard from '../components/checkout-item-card';
 import HeaderCart from '../components/header-cart';
+import BackButton from '../components/back-button';
 
 const MyOrderScreen = ({ route }) => {
     const { item } = route.params;
@@ -50,16 +51,8 @@ const MyOrderScreen = ({ route }) => {
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.topView}>
-                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                    <BackButton />
                     <Text style={styles.categoryName}>Order History </Text>
-                    {/* <TouchableOpacity style={styles.cartIconView} onPress={() => navigation.navigate("Cart")}>
-                        <Image source={require("../components/icons/groceryCart.png")} height={20} width={20} />
-                        <View style={styles.topQuantity}>
-                            <Text style={styles.topQuantityText}>{cartStore.cart.length}</Text>
-                        </View>
-                    </TouchableOpacity> */}
                     <HeaderCart />
                 </View>
                 <View style={styles.wholeItemsView}>
@@ -168,15 +161,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: '3%',
         marginTop: '2%'
-    },
-    BackArrow: {
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#F1F1F5"
     },
     categoryName: {
         fontSize: 20,

@@ -4,6 +4,7 @@ import { Colors } from '../assets/styles/colors'
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { fetchPost } from '../utils/fetch-api';
 import { useNavigation } from '@react-navigation/native';
+import BackButton from '../components/back-button';
 
 const ForgotPasswordScreen = ({ route }) => {
     const { email } = route.params;
@@ -58,9 +59,7 @@ const ForgotPasswordScreen = ({ route }) => {
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.headingView} >
-                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                    <BackButton />
                     <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
                 </View>
                 <View style={styles.textView}>
@@ -159,17 +158,6 @@ const styles = StyleSheet.create({
     logoImage: {
         alignSelf: 'center',
         marginTop: "3%"
-    },
-    BackArrow: {
-        position: 'absolute',
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 30,
-        width: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        left: 0,
-        backgroundColor: "#F1F1F5"
     },
     headingText: {
         fontSize: 25,

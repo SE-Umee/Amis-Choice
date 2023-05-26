@@ -1,18 +1,43 @@
 import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, Alert } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Colors } from '../assets/styles/colors'
 import { TextInput } from 'react-native-paper';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useNavigation } from '@react-navigation/native';
 import { fetchPost } from '../utils/fetch-api';
 import { CartStore } from '../store/cart-store';
+import BackButton from '../components/back-button';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const LoginScreen = () => {
     const cartStore = CartStore.useContainer();
     const navigation = useNavigation();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [emailValidated, setEmailValidated] = useState(false);
+    const [showPassword, setshowPassword] = useState(true);
 
+
+
+
+    const togglePasswordVisibility = () => {
+        setshowPassword(!showPassword);
+    };
+
+    const emailValidation = () => {
+        const strongRegex = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
+
+        if (!strongRegex.test(email)) {
+            setEmailValidated(true)
+        }
+        else {
+            setEmailValidated(false)
+        }
+    }
+
+    useEffect(() => {
+        emailValidation()
+    }, [email])
 
 
     const fetchUser = async () => {
@@ -49,9 +74,7 @@ const LoginScreen = () => {
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.headingView} >
-                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                    <BackButton />
                     <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
                 </View>
                 <View style={styles.textView}>
@@ -59,24 +82,44 @@ const LoginScreen = () => {
                     <Text style={styles.text}>Stay signed with your account to make{'\n'}seaching easior</Text>
                 </View>
                 <View style={styles.textInputView}>
-                    <TextInput
-                        label="Your Email"
-                        value={email}
-                        onChangeText={text => setEmail(text)}
-                        mode="outlined"
-                        style={styles.textInput}
-                        activeOutlineColor={Colors.greenColor}
-                        left={<TextInput.Icon icon="email-outline" />}
-                    />
+                    <View style={{
+                        width: wp("80%"),
+                        alignItems: 'center',
+                    }}>
+                        <TextInput
+                            label="Your Email"
+                            value={email}
+                            onChangeText={text => {
+
+                                setEmail(text)
+                            }}
+                            onFocus={() => emailValidation()}
+                            mode="outlined"
+                            style={styles.textInput}
+                            activeOutlineColor={Colors.greenColor}
+                            left={<TextInput.Icon icon="email-outline" />}
+                        />
+                        <View style={{
+                            alignSelf: 'flex-start',
+                            marginTop: hp(-1.2)
+                        }}>
+                            {
+                                emailValidated ?
+                                    <Text style={{ color: "red" }}>Invalid Email</Text>
+                                    : <></>
+                            }
+                        </View>
+
+                    </View>
                     <TextInput
                         label="Password"
                         value={password}
                         onChangeText={text => setPassword(text)}
                         mode="outlined"
-                        secureTextEntry
+                        secureTextEntry={showPassword}
                         style={styles.textInput}
                         activeOutlineColor={Colors.greenColor}
-                        right={<TextInput.Icon icon="eye" color={((isTextInputFocused = false) => Colors.gray | undefined) | Colors.greenColor} />} lock
+                        right={<TextInput.Icon icon={showPassword ? "eye" : 'eye-off'} color={Colors.gray} onPress={togglePasswordVisibility} />}
                         left={<TextInput.Icon icon="lock" />}
                     />
                     <TouchableOpacity style={styles.forget} onPress={() => { forgetPassword() }}>
@@ -84,6 +127,7 @@ const LoginScreen = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonView}>
+
                     <TouchableOpacity style={styles.login} onPress={() => {
                         fetchUser()
                     }}>
@@ -116,17 +160,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: "3%"
     },
-    BackArrow: {
-        position: 'absolute',
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        left: 0,
-        backgroundColor: "#F1F1F5"
-    },
     headingText: {
         fontSize: 25,
         fontWeight: '700',
@@ -141,8 +174,7 @@ const styles = StyleSheet.create({
         paddingVertical: '2%'
     },
     textInput: {
-        width: '100%',
-        height: 46,
+        width: wp('80%'),
         marginVertical: '2%',
 
         borderRadius: 8,

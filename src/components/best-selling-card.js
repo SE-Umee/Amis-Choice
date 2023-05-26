@@ -65,11 +65,14 @@ const BestSellingCard = ({ item }) => {
                     <Text style={styles.outOfStockText}>Out of stock</Text>
                 </View>
             }
-            {!item.productImages[0]?.url ?
-                <Image source={{ uri: "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
-                :
-                <Image source={{ uri: item?.productImages[0]?.url }} style={{ alignSelf: 'center', height: "50%", width: 93 }} resizeMode="contain" />
-            }
+            <Image
+                source={item.productImages[0]?.url ?
+                    { uri: item?.productImages[0]?.url }
+                    : { uri: "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" }}
+                style={{ alignSelf: 'center', height: "50%", width: 93 }}
+                resizeMode="contain"
+                defaultSource={{ uri: "https://socialistmodernism.com/wp-content/uploads/2017/07/placeholder-image.png" }}
+            />
             <Text style={styles.bestSellingName}>{item.title}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: '5%', paddingVertical: '4%' }}>
                 <Text style={styles.quantity}>{item.quantity}kg</Text>
@@ -167,27 +170,28 @@ const styles = StyleSheet.create({
         color: "#FF324B",
         fontWeight: '700',
         // fontSize: 8,
-        fontSize: hp('1.1%'),
+        fontSize: hp('1%'),
         lineHeight: 10.42,
     },
     percentagePrice: {
         color: "#FF324B",
         fontWeight: '700',
-        fontSize: 16,
+        // fontSize: 16,
+        fontSize: hp('2%'),
         lineHeight: 20.23,
     },
     originalPrice: {
         color: Colors.contentText,
         fontWeight: '400',
         // fontSize: 16,
-        fontSize: hp('2.3%'),
+        fontSize: hp('2%'),
         lineHeight: 20.83,
         textDecorationLine: "line-through"
     },
     addButton: {
         // width: 30,
         // height: 30,
-        height: hp("4.5%"),
+        height: hp("4%"),
         width: wp("8%"),
         backgroundColor: Colors.greenColor,
         position: 'absolute',

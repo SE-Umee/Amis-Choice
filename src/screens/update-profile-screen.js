@@ -5,6 +5,7 @@ import { Colors } from '../assets/styles/colors'
 import { TextInput } from 'react-native-paper'
 import { useNavigation } from '@react-navigation/native';
 import { CartStore } from '../store/cart-store'
+import BackButton from '../components/back-button'
 
 const UpdateProfileScreen = () => {
     const [firstName, setFirstName] = useState("");
@@ -42,9 +43,7 @@ const UpdateProfileScreen = () => {
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.topIconView}>
-                    <TouchableOpacity style={styles.BackArrow} onPress={() => navigation.goBack()}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                    <BackButton />
                     <Text style={styles.topHeadingText}>Account Details</Text>
                 </View>
                 <View style={styles.wholeItemsView}>
@@ -112,15 +111,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingTop: '2%'
     },
-    BackArrow: {
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 44,
-        width: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#F1F1F5"
-    },
     topHeadingText: {
         color: Colors.contentText,
         fontSize: 20,
@@ -140,7 +130,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '47%',
-        height: 46,
+        // height: 46,
         marginTop: '5%',
         backgroundColor: '#fff'
     },

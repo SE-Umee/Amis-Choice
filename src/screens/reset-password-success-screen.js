@@ -4,15 +4,14 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import Entypo from "react-native-vector-icons/Entypo";
 
 import { Colors } from '../assets/styles/colors';
+import BackButton from '../components/back-button';
 
 const ResetPasswordSuccess = () => {
   return (
     <View style={styles.mainContainer}>
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.headingView} >
-          <TouchableOpacity style={styles.BackArrow}>
-            <AntDesign name="left" />
-          </TouchableOpacity>
+          <BackButton />
           <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
         </View>
         <View style={styles.textView}>
@@ -44,16 +43,6 @@ const styles = StyleSheet.create({
   logoImage: {
     alignSelf: 'center',
     marginTop: "3%"
-  },
-  BackArrow: {
-    position: 'absolute',
-    borderWidth: 0.1,
-    borderRadius: 100,
-    height: 30,
-    width: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 0
   },
   headingText: {
     fontSize: 25,

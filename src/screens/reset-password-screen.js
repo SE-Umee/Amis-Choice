@@ -4,6 +4,7 @@ import { Colors } from '../assets/styles/colors'
 import { TextInput } from 'react-native-paper';
 import AntDesign from "react-native-vector-icons/AntDesign";
 import { useNavigation } from '@react-navigation/native';
+import BackButton from '../components/back-button';
 
 const ResetPasswordScreen = ({ route }) => {
     const { otp, data } = route.params;
@@ -45,9 +46,7 @@ const ResetPasswordScreen = ({ route }) => {
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
                 <View style={styles.headingView} >
-                    <TouchableOpacity style={styles.BackArrow}>
-                        <AntDesign name="left" />
-                    </TouchableOpacity>
+                    <BackButton />
                     <Image source={require("../assets/images/heading_logo.png")} style={styles.logoImage} />
                 </View>
                 <View style={styles.textView}>
@@ -101,17 +100,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginTop: "3%"
     },
-    BackArrow: {
-        position: 'absolute',
-        borderWidth: 0.1,
-        borderRadius: 100,
-        height: 30,
-        width: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        left: 0,
-        backgroundColor: "#F1F1F5"
-    },
     headingText: {
         fontSize: 25,
         fontWeight: '700',
@@ -127,7 +115,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: '100%',
-        height: 46,
+        // height: 46,
         marginVertical: '2%',
         borderRadius: 8,
         shadowColor: "#575C55",
