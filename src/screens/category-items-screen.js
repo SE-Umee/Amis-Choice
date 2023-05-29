@@ -68,7 +68,7 @@ const CategoryItemsScreen = ({ route }) => {
             body: JSON.stringify({ title: search })
         });
         let jsonResponse = await response.json();
-        setSearchData(jsonResponse.result.rows);
+        setSearchData(jsonResponse);
     };
 
     useEffect(() => {
@@ -119,7 +119,7 @@ const CategoryItemsScreen = ({ route }) => {
                     {searchData?.result?.rows.length > 0 ?
                         <FlatList
                             numColumns={2}
-                            data={searchData}
+                            data={searchData.result.rows}
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item }) => {
                                 return (
