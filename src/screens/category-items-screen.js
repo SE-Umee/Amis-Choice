@@ -25,9 +25,11 @@ const CategoryItemsScreen = ({ route }) => {
     const navigation = useNavigation();
     const cartStore = CartStore.useContainer();
     const [product, setProduct] = useState([]);
-    const [filter, setFilter] = useState(false);
+    const [searchData, setSearchData] = useState();
+    const [sort, setSort] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
-    const [search, setSearch] = useState([])
+    const [search, setSearch] = useState()
+    // const [sortData, setSortData] = useState([]);
     const fetchProduct = async (id) => {
 
         if (!id) {
@@ -37,48 +39,87 @@ const CategoryItemsScreen = ({ route }) => {
         else {
             let response = await fetch(`http://192.168.18.86:3002/api/product/category/view/${id}`);
             let data = await response.json();
-            setProduct(data);
+            setProduct(data.result.products);
         }
 
     };
+
     useEffect(() => {
         fetchProduct(itemId)
     }, [navigation])
+
+    const isBack = () => {
+        if (isSearch) {
+            setIsSearch(!isSearch)
+        }
+        else {
+            navigation.goBack()
+        }
+
+    }
+
+    const fetchSearch = async () => {
+        let response = await fetch('http://192.168.18.86:3002/api/product/view', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title: search })
+        });
+        let jsonResponse = await response.json();
+        setSearchData(jsonResponse.result.rows);
+    };
+
+    useEffect(() => {
+        fetchSearch();
+    }, [search]);
 
 
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.mainContainer}>
-                <View style={styles.topView}>
-                    <View style={styles.topLeftView}>
-                        <BackButton />
-                        {!isSearch ?
-                            <Text style={styles.categoryName}> {itemId ? product?.result?.title : "Categories"}</Text>
-                            :
+                <View style={isSearch ? styles.topView : [styles.topView, { justifyContent: 'flex-start' }]}>
+                    <TouchableOpacity style={styles.BackArrow} onPress={() => isBack()}>
+                        <AntDesign name="left" />
+                    </TouchableOpacity>
+                    {!isSearch ?
+                        <>
+                            <View style={styles.topLeftView}>
+                                <Text style={styles.categoryName}> {itemId ? product?.result?.title : "Categories"}</Text>
+                            </View>
+                            <View style={styles.topRightView}>
+                                <TouchableOpacity style={styles.BackArrow}
+                                    onPress={() => {
+                                        setIsSearch(!isSearch)
+                                        setSort(false)
+                                        { }
+                                    }}
+                                >
+                                    <AntDesign name="search1" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.BackArrow, { marginHorizontal: '3%' }]} onPress={() => setSort(!sort)}>
+                                    <Image source={require("../components/icons/filterIcon.png")} height={20} width={20} />
+                                </TouchableOpacity>
+                                <HeaderCart />
+                            </View>
+                        </>
+                        :
+                        <View>
                             <TextInput
                                 placeholder='Search Product'
                                 placeholderTextColor={Colors.gray}
                                 value={search}
                                 onChangeText={setSearch}
-                                style={styles.searchInput}
-                            />
-                        }
-                    </View>
-                    <View style={styles.topRightView}>
-                        <TouchableOpacity style={styles.BackArrow} onPress={() => setIsSearch(!isSearch)}>
-                            <AntDesign name="search1" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.BackArrow, { marginHorizontal: '3%' }]} onPress={() => setFilter(!filter)}>
-                            <Image source={require("../components/icons/filterIcon.png")} height={20} width={20} />
-                        </TouchableOpacity>
-                        <HeaderCart />
-                    </View>
+                                style={styles.searchInput} />
+                        </View>
+                    }
                 </View>
-                <View style={styles.wholeItemsView}>
-                    {itemId ?
+                {search ? <View style={styles.wholeItemsView}>
+                    {searchData?.result?.rows.length > 0 ?
                         <FlatList
                             numColumns={2}
-                            data={product?.result?.products}
+                            data={searchData}
                             showsVerticalScrollIndicator={false}
                             renderItem={({ item }) => {
                                 return (
@@ -87,7 +128,11 @@ const CategoryItemsScreen = ({ route }) => {
                             }}
                         />
                         :
-                        <View style={{ marginBottom: '20%', }}>
+                        <Text style={{ alignSelf: 'center', marginTop: hp("10%") }}>No Item Found</Text>
+                    }
+                </View> :
+                    <View style={styles.wholeItemsView}>
+                        {itemId ?
                             <FlatList
                                 numColumns={2}
                                 data={product}
@@ -98,16 +143,35 @@ const CategoryItemsScreen = ({ route }) => {
                                     )
                                 }}
                             />
-                        </View>
-                    }
-                </View>
-                {filter ?
-                    <View style={styles.filters}>
-                        <TouchableOpacity style={styles.filtersBtn}>
-                            <Text style={styles.filtersText}>Low to Height Price</Text>
+                            :
+                            <View style={{ marginBottom: '20%', }}>
+                                <FlatList
+                                    numColumns={2}
+                                    data={product}
+                                    showsVerticalScrollIndicator={false}
+                                    renderItem={({ item }) => {
+                                        return (
+                                            <BestSellingCard item={item} />
+                                        )
+                                    }}
+                                />
+                            </View>
+                        }
+                    </View>
+                }
+                {sort ?
+                    <View style={styles.sort}>
+                        <TouchableOpacity style={styles.sortBtn} onPress={() => {
+                            setProduct(product.sort((a, b) => a.price - b.price))
+                            setSort(!sort)
+                        }}>
+                            <Text style={styles.sortText}>Low to Height Price</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.filtersBtn}>
-                            <Text style={styles.filtersText}>Height to Low Price</Text>
+                        <TouchableOpacity style={styles.sortBtn} onPress={() => {
+                            setProduct(product.sort((a, b) => b.price - a.price))
+                            setSort(!sort)
+                        }}>
+                            <Text style={styles.sortText}>Height to Low Price</Text>
                         </TouchableOpacity>
                     </View>
                     :
@@ -166,30 +230,40 @@ const styles = StyleSheet.create({
         paddingHorizontal: '8%',
         marginTop: '4%'
     },
-    filters: {
+    sort: {
         position: 'absolute',
-        top: hp(7),
+        top: hp(8),
         right: wp(7),
         backgroundColor: "#fff",
         paddingVertical: hp(2),
         paddingHorizontal: wp(1),
         borderRadius: 7
     },
-    filtersBtn: {
+    sortBtn: {
         marginTop: hp(1),
     },
-    filtersText: {
+    sortText: {
         fontSize: hp(1.5),
         fontWeight: "700",
         color: Colors.contentText
     },
     searchInput: {
         backgroundColor: "#fff",
-        width: wp(44),
+        width: wp(80),
+        height: hp(5.9),
         marginLeft: wp(1.5),
         marginTop: hp(1),
         borderRadius: 100,
         paddingLeft: wp(3),
+        alignSelf: 'flex-start'
     },
-
+    BackArrow: {
+        borderWidth: 0.1,
+        borderRadius: 100,
+        height: hp("5.9%"),
+        width: wp("11%"),
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#F1F1F5"
+    },
 })
