@@ -9,7 +9,9 @@ import {
     TouchableOpacity,
     FlatList,
     ScrollView,
-    Animated
+    Animated,
+    PermissionsAndroid,
+    Alert
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Colors } from '../assets/styles/colors'
@@ -22,6 +24,7 @@ import BestSellingCard from '../components/best-selling-card';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderCart from '../components/header-cart';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import messaging from '@react-native-firebase/messaging';
 
 
 const HomeScreen = () => {
@@ -84,7 +87,6 @@ const HomeScreen = () => {
         },
     ]
 
-
     const getCartData = async () => {
         try {
             const cart = await AsyncStorage.getItem('@cart');
@@ -99,6 +101,45 @@ const HomeScreen = () => {
     useEffect(() => {
         getCartData();
     }, []);
+
+    useEffect(() => {
+        requestUserPermission()
+    }, [])
+
+    async function requestUserPermission() {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) {
+            console.log(`Authorization status:` + authStatus);
+            getFcmToken();
+        }
+    }
+    const getFcmToken = async () => {
+
+        try {
+            let fcm = await messaging().getToken();
+            if (fcm) {
+                console.log('====================================');
+                console.log(fcm);
+                console.log('====================================');
+
+            }
+
+        } catch (error) {
+            alert(error);
+        }
+    };
+
+    useEffect(() => {
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+            Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+        });
+
+        return unsubscribe;
+    }, []);
+
 
     return (
         <View style={styles.mainContainer}>

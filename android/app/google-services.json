@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "814567977382",
+    "project_id": "amis-choice",
+    "storage_bucket": "amis-choice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814567977382:android:b6e4b342ca274dfee01f67",
+        "android_client_info": {
+          "package_name": "com.amischoice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPxZN5pQn95Z2Nfc7xfqAzgQJmK8luxGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
