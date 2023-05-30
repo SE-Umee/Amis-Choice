@@ -119,14 +119,10 @@ const HomeScreen = () => {
     const getFcmToken = async () => {
 
         try {
-            let fcm = await messaging().getToken();
-            if (fcm) {
-                console.log('====================================');
-                console.log(fcm);
-                console.log('====================================');
-
-            }
-
+            const token = await messaging().getToken();
+            console.log('====================================');
+            console.log(token);
+            console.log('====================================');
         } catch (error) {
             alert(error);
         }
@@ -134,11 +130,30 @@ const HomeScreen = () => {
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async remoteMessage => {
-            Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+            handleNotificationTap(remoteMessage);
         });
 
-        return unsubscribe;
+        // Register background handler
+        const unsubscribe1 = messaging().setBackgroundMessageHandler(async remoteMessage => {
+            handleNotificationTap(remoteMessage);
+        });
+
+        messaging()
+            .getInitialNotification()
+            .then(remoteMessage => {
+                if (remoteMessage) {
+                    handleNotificationTap(remoteMessage);
+                }
+            });
+
+        return (unsubscribe, unsubscribe1);
     }, []);
+
+    const handleNotificationTap = remoteMessage => {
+        // Extract the screen name from the notification payload or use a default screen
+        const id = remoteMessage.data.id || 'Home';
+        navigation.navigate("CategoryItems", { itemId: id });
+    };
 
 
     return (
