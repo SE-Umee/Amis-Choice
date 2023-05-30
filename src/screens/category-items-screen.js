@@ -29,7 +29,6 @@ const CategoryItemsScreen = ({ route }) => {
     const [sort, setSort] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
     const [search, setSearch] = useState()
-    // const [sortData, setSortData] = useState([]);
     const fetchProduct = async (id) => {
 
         if (!id) {
@@ -39,14 +38,14 @@ const CategoryItemsScreen = ({ route }) => {
         else {
             let response = await fetch(`http://192.168.18.86:3002/api/product/category/view/${id}`);
             let data = await response.json();
-            setProduct(data.result.products);
+            setProduct(data);
         }
 
     };
 
     useEffect(() => {
         fetchProduct(itemId)
-    }, [navigation])
+    }, [])
 
     const isBack = () => {
         if (isSearch) {
@@ -74,7 +73,6 @@ const CategoryItemsScreen = ({ route }) => {
     useEffect(() => {
         fetchSearch();
     }, [search]);
-
 
     return (
         <View style={styles.mainContainer}>
@@ -135,7 +133,7 @@ const CategoryItemsScreen = ({ route }) => {
                         {itemId ?
                             <FlatList
                                 numColumns={2}
-                                data={product}
+                                data={product.result?.products}
                                 showsVerticalScrollIndicator={false}
                                 renderItem={({ item }) => {
                                     return (
