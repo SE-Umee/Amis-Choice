@@ -133,10 +133,7 @@ const HomeScreen = () => {
             handleNotificationTap(remoteMessage);
         });
 
-        // Register background handler
-        const unsubscribe1 = messaging().setBackgroundMessageHandler(async remoteMessage => {
-            handleNotificationTap(remoteMessage);
-        });
+
 
         messaging()
             .getInitialNotification()
@@ -146,7 +143,7 @@ const HomeScreen = () => {
                 }
             });
 
-        return (unsubscribe, unsubscribe1);
+        return (unsubscribe);
     }, []);
 
     const handleNotificationTap = remoteMessage => {

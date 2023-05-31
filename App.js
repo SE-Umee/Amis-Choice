@@ -193,11 +193,11 @@ const Profile = () => {
     ;
 };
 
-export default function App() {
+export default function App({ navigationRef }) {
   return (
     <PaperProvider>
       <CartStore.Provider>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name='stack' component={Home} />
             <Stack.Screen name='MyOrder' component={MyOrderScreen} />
