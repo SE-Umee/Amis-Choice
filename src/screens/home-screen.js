@@ -25,6 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import HeaderCart from '../components/header-cart';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import messaging from '@react-native-firebase/messaging';
+import notifee from '@notifee/react-native';
 
 
 const HomeScreen = () => {
@@ -121,7 +122,7 @@ const HomeScreen = () => {
         try {
             const token = await messaging().getToken();
             console.log('====================================');
-            console.log(token);
+            console.log("device token :", token);
             console.log('====================================');
         } catch (error) {
             alert(error);
@@ -130,21 +131,48 @@ const HomeScreen = () => {
 
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async remoteMessage => {
-            handleNotificationTap(remoteMessage);
+            // handleNotificationTap(remoteMessage);
+            onDisplayNotification(remoteMessage);
         });
-
-
 
         messaging()
             .getInitialNotification()
             .then(remoteMessage => {
                 if (remoteMessage) {
                     handleNotificationTap(remoteMessage);
+                    // onDisplayNotification(remoteMessage);
                 }
             });
 
         return (unsubscribe);
     }, []);
+
+    const onDisplayNotification = async (remoteMessage) => {
+        await notifee.requestPermission()
+
+        // Create a channel (required for Android)
+        const channelId = await notifee.createChannel({
+            id: 'custom_channel',
+            name: 'Default Channel',
+        });
+
+        // Display a notification
+        await notifee.displayNotification({
+            title: 'Local Notification',
+            body: 'Main body content of my Local notification',
+            android: {
+                channelId,
+            },
+            data: remoteMessage
+        });
+
+        const unsubscribe = notifee.onForegroundEvent(async ({ detail }) => {
+            handleNotificationTap(detail.notification.data)
+        });
+        return (unsubscribe)
+
+
+    }
 
     const handleNotificationTap = remoteMessage => {
         // Extract the screen name from the notification payload or use a default screen
