@@ -185,7 +185,7 @@ const CheckOutScreen = () => {
 
     useEffect(() => {
         initializePaymentSheet();
-    }, []);
+    }, [bill]);
 
     // ---------------------- Strip Payment method-----------------
 
