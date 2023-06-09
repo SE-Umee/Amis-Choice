@@ -10,7 +10,7 @@ import { CartStore } from '../store/cart-store'
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import CheckoutItemCard from '../components/checkout-item-card'
-import BackButton from '../components/back-button'
+import { useStripe } from '@stripe/stripe-react-native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
@@ -31,6 +31,7 @@ const CheckOutScreen = () => {
     const [bill, setTotalBill] = useState(0);
     const [product, setProduct] = useState([]);
     const [emailValidated, setEmailValidated] = useState(false);
+    const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
     const radioButton = () => {
         setRadioBtn(!radioBtn)
@@ -81,7 +82,8 @@ const CheckOutScreen = () => {
         let jsonResponse = await response.json();
 
         if (jsonResponse.statusCode === 200) {
-            navigation.navigate("OrderSuccess", { address, phone })
+            // navigation.navigate("OrderSuccess", { address, phone })
+            openPaymentSheet()
         }
         else {
             Alert.alert("Order can't placed")
@@ -121,6 +123,71 @@ const CheckOutScreen = () => {
     useEffect(() => {
         totalBill()
     }, [subTotal, deliveryCharges])
+
+    // ---------------------- Strip Payment method-----------------
+
+
+    const fetchPaymentSheetParams = async () => {
+        let response = await fetch("http://192.168.18.86:3000/payments/intents", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount: Math.floor(bill * 100) })
+        });
+        const { paymentIntent, ephemeralKey, customer } = await response.json();
+        return {
+            paymentIntent,
+            ephemeralKey,
+            customer,
+        };
+    };
+
+
+    const initializePaymentSheet = async () => {
+        const {
+            paymentIntent,
+            ephemeralKey,
+            customer,
+            publishableKey,
+        } = await fetchPaymentSheetParams();
+        const initPaymentSheets = await initPaymentSheet({
+            merchantDisplayName: firstName || "InfinityBits",
+            customerId: customer,
+            customerEphemeralKeySecret: ephemeralKey,
+            paymentIntentClientSecret: paymentIntent,
+            allowsDelayedPaymentMethods: true,
+            defaultBillingDetails: {
+                name: 'Jane Doe',
+            }
+        });
+        if (initPaymentSheets.error) {
+            console.log('====================================');
+            console.log("error", error);
+            console.log('====================================');
+        }
+    };
+
+    const openPaymentSheet = async () => {
+        const paymentResponse = await presentPaymentSheet();
+
+        if (paymentResponse.error) {
+            console.log('====================================');
+            console.log(`Error code: ${error.code}`, error.message);
+            console.log('====================================');
+
+        } else {
+            Alert.alert('Success', 'Your order is confirmed!');
+        }
+
+    };
+
+    useEffect(() => {
+        initializePaymentSheet();
+    }, []);
+
+    // ---------------------- Strip Payment method-----------------
 
     return (
         <View style={styles.mainContainer}>

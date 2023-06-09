@@ -28,8 +28,9 @@ import ResetPasswordScreen from './src/screens/reset-password-screen';
 import OrderHistoryScreen from './src/screens/order-history-screen';
 import MyOrderScreen from './src/screens/my-order-screen';
 import UpdateProfileScreen from './src/screens/update-profile-screen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import AllCategoryScreen from './src/screens/all-category-screen';
+import StripScreen from './src/components/strip-screen';
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,7 @@ const Home = () => {
       <Stack.Screen name='CheckOut' component={CheckOutScreen} />
       <Stack.Screen name='OrderSuccess' component={PlaceOrderSuccessScreen} />
       <Stack.Screen name='ResetPassword' component={ResetPasswordScreen} />
+      <Stack.Screen name='Strip' component={StripScreen} />
     </Stack.Navigator>
   )
     ;
@@ -196,16 +198,18 @@ const Profile = () => {
 export default function App({ navigationRef }) {
   return (
     <PaperProvider>
-      <CartStore.Provider>
-        <NavigationContainer ref={navigationRef}>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name='stack' component={Home} />
-            <Stack.Screen name='MyOrder' component={MyOrderScreen} />
-            <Stack.Screen name='UpdateProfile' component={UpdateProfileScreen} />
-            <Stack.Screen name='Order' component={OrderHistoryScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </CartStore.Provider>
+      <StripeProvider publishableKey=' pk_test_51NE5jdCdL5Uy64pBWiu3k8tGVcYpq06Dz7uMoDL3jRuNDFCNqnDb1C3Jpv22HD8mzR9g7oERZX6IQMyWt451NlzO00veHvd5V7'>
+        <CartStore.Provider>
+          <NavigationContainer ref={navigationRef}>
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name='stack' component={Home} />
+              <Stack.Screen name='MyOrder' component={MyOrderScreen} />
+              <Stack.Screen name='UpdateProfile' component={UpdateProfileScreen} />
+              <Stack.Screen name='Order' component={OrderHistoryScreen} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </CartStore.Provider>
+      </StripeProvider>
     </PaperProvider>
   );
 }

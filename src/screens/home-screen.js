@@ -92,8 +92,11 @@ const HomeScreen = () => {
         try {
             const cart = await AsyncStorage.getItem('@cart');
             const user = await AsyncStorage.getItem("@user")
-            cartStore.setCart(JSON.parse(cart))
-            cartStore.setUser(JSON.parse(user))
+            if ((cart.length != 0) && (user != undefined)) {
+                cartStore.setCart(JSON.parse(cart))
+                cartStore.setUser(JSON.parse(user))
+            }
+
         } catch (e) {
             alert('Failed to save the data to the storage')
         }
